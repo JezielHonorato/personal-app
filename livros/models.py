@@ -1,8 +1,13 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+
 class Pais(models.Model):
-    nome = models.CharField(max_length=100, unique=True, verbose_name="Nome do País")
+    nome = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="Nome do País",
+    )
 
     def __str__(self):
         return self.name
@@ -10,37 +15,57 @@ class Pais(models.Model):
     class Meta:
         verbose_name = "País"
         verbose_name_plural = "Países"
-        ordering = ['nome']
-        
+        ordering = ["nome"]
+
+
 class Autor(models.Model):
-    nome = models.CharField(max_length=255, verbose_name="Nome")
-    data_nascimento = models.DateField(blank=True, null=True, verbose_name="Nascimento")
-    data_morte = models.DateField(blank=True, null=True, verbose_name="Falecimento")
-    pais = models.ForeignKey(Pais, on_delete=models.SET_NULL, blank=True, null=True, related_name='autores', verbose_name="País de Origem")
-    
+    nome = models.CharField(
+        max_length=255,
+        verbose_name="Nome",
+    )
+    data_nascimento = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Nascimento",
+    )
+    data_morte = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Falecimento",
+    )
+    pais = models.ForeignKey(
+        Pais,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="autores",
+        verbose_name="País de Origem",
+    )
+
     def __str__(self):
         return self.nome
 
     class Meta:
         verbose_name = "Autor"
         verbose_name_plural = "Autores"
-        ordering = ['nome']
+        ordering = ["nome"]
+
 
 class Genero(models.Model):
     GENERO_OPC = [
-        (1, 'Romance'),
-        (2, 'Conto'),
-        (3, 'Novela'),
-        (4, 'Ensaio'),
-        (5, 'Teatro'),
-        (6, 'Poema'),
-        (7, 'Outro'),
+        (1, "Romance"),
+        (2, "Conto"),
+        (3, "Novela"),
+        (4, "Ensaio"),
+        (5, "Teatro"),
+        (6, "Poema"),
+        (7, "Outro"),
     ]
     nome = models.CharField(
         max_length=50,
         choices=GENERO_OPC,
         unique=True,
-        verbose_name="Nome do Gênero"
+        verbose_name="Nome do Gênero",
     )
 
     def __str__(self):
@@ -49,5 +74,89 @@ class Genero(models.Model):
     class Meta:
         verbose_name = "Gênero"
         verbose_name_plural = "Gêneros"
-        ordering = ['nome']
-        
+        ordering = ["nome"]
+
+
+class Livro(models.Model):
+    titulo = models.CharField(
+        max_length=255,
+        verbose_name="Título",
+    )
+    titulo_original = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Título Original",
+    )
+    autor = models.ForeignKey(
+        Autor,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="livros",
+        verbose_name="Autor",
+    )
+    genero = models.ForeignKey(
+        Genero,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="generos",
+        verbose_name="Gênero",
+    )
+    ano_publicacao = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Ano de Publicação",
+    )
+
+    STATUS_CHOICES = [
+        (1, "Lido"),
+        (2, "Lendo Agora"),
+        (3, "Quero Ler"),
+        (4, "Abandonado"),
+    ]
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default="Quero Ler",
+        verbose_name="Status de Leitura",
+    )
+    avaliacao = models.IntegerField(
+        choices=[(i, str(i)) for i in range(1, 6)],
+        blank=True,
+        null=True,
+        verbose_name="Sua Avaliação",
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
+    )
+    data_inicio = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Data de Início da Leitura",
+    )
+    data_fim = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name="Data de Conclusão",
+    )
+    arquivo = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        verbose_name="Caminho do Arquivo",
+    )
+    capa = models.ImageField(
+        upload_to="book_covers/",
+        blank=True,
+        null=True,
+        verbose_name="Capa do Livro",
+    )
+
+    def __str__(self):
+        nome_autor = ", ".join([autor.nome for autor in self.autores.all()])
+        return f"{self.titulo} por {nome_autor if nome_autor else 'Autor Desconhecido'}"
+
+    class Meta:
+        verbose_name = "Livro"
+        verbose_name_plural = "Livros"
+        ordering = ["titulo"]
