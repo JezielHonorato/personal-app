@@ -28,7 +28,7 @@ class Autor(models.Model):
         null=True,
         verbose_name="Nascimento",
     )
-    data_morte = models.DateField(
+    data_obito = models.DateField(
         blank=True,
         null=True,
         verbose_name="Falecimento",
