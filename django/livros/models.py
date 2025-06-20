@@ -52,24 +52,14 @@ class Autor(models.Model):
 
 
 class Genero(models.Model):
-    GENERO_OPC = [
-        (1, "Romance"),
-        (2, "Conto"),
-        (3, "Novela"),
-        (4, "Ensaio"),
-        (5, "Teatro"),
-        (6, "Poema"),
-        (7, "Outro"),
-    ]
     nome = models.CharField(
         max_length=50,
-        choices=GENERO_OPC,
         unique=True,
         verbose_name="Nome do Gênero",
     )
 
     def __str__(self):
-        return self.get_nome_display()
+        return self.nome
 
     class Meta:
         verbose_name = "Gênero"
@@ -139,14 +129,14 @@ class Livro(models.Model):
         null=True,
         verbose_name="Data de Conclusão",
     )
-    arquivo = models.CharField(
-        max_length=500,
+    arquivo = models.FileField(
+        upload_to="file_livros/arquivos/",
         blank=True,
         null=True,
-        verbose_name="Caminho do Arquivo",
+        verbose_name="Arquivo",
     )
     capa = models.ImageField(
-        upload_to="book_covers/",
+        upload_to="file_livros/capas/",
         blank=True,
         null=True,
         verbose_name="Capa do Livro",
