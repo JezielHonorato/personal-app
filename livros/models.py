@@ -10,7 +10,7 @@ class Pais(models.Model):
     )
 
     def __str__(self):
-        return self.name
+        return self.nome
 
     class Meta:
         verbose_name = "País"
@@ -69,7 +69,7 @@ class Genero(models.Model):
     )
 
     def __str__(self):
-        return self.nome
+        return self.get_nome_display()
 
     class Meta:
         verbose_name = "Gênero"
@@ -93,7 +93,7 @@ class Livro(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="livros",
+        related_name="livros_do_autor",
         verbose_name="Autor",
     )
     genero = models.ForeignKey(
@@ -101,7 +101,7 @@ class Livro(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="generos",
+        related_name="livros_do_genero",
         verbose_name="Gênero",
     )
     ano_publicacao = models.IntegerField(
@@ -111,13 +111,13 @@ class Livro(models.Model):
     )
 
     STATUS_CHOICES = [
-        (1, "Lido"),
-        (2, "Lendo Agora"),
-        (3, "Quero Ler"),
-        (4, "Abandonado"),
+        ("Lido", "Lido"),
+        ("Lendo Agora", "Lendo Agora"),
+        ("Quero Ler", "Quero Ler"),
+        ("Abandonado", "Abandonado"),
     ]
     status = models.CharField(
-        max_length=10,
+        max_length=15,
         choices=STATUS_CHOICES,
         default="Quero Ler",
         verbose_name="Status de Leitura",
@@ -152,9 +152,11 @@ class Livro(models.Model):
         verbose_name="Capa do Livro",
     )
 
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        nome_autor = ", ".join([autor.nome for autor in self.autores.all()])
-        return f"{self.titulo} por {nome_autor if nome_autor else 'Autor Desconhecido'}"
+        return f"{self.titulo} por {self.autor.nome if self.autor else 'Autor Desconhecido'}"
 
     class Meta:
         verbose_name = "Livro"
