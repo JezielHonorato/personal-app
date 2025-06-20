@@ -4,6 +4,11 @@ Ativar o Backend
 ```bash
 python manage.py runserver
 ```
+Banco de dados
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
 ## Frontend
 Ativar o Frontend
