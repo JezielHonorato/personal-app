@@ -2,7 +2,10 @@
 	"files": [],
 	"references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
 	"compilerOptions": {
+		"types": ["node"],
 		"moduleResolution": "node",
+		"module": "ESNext",
+		"target": "ESNext",
 		"baseUrl": ".",
 		"paths": {
 			"@vue/*": ["node_modules/@vue/*"],
