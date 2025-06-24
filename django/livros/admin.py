@@ -38,20 +38,19 @@ class LivroAdmin(admin.ModelAdmin):
         "autor",
         "genero",
         "ano_publicacao",
-        "status",
-        "avaliacao",
         "titulo_original",
+        "lido",
     )
     list_filter = (
-        "status",
+        "titulo",
+        "autor",
         "genero",
         "ano_publicacao",
-        "autor",
+        "lido",
     )
     search_fields = (
         "titulo",
         "titulo_original",
         "autor__nome",
         "genero__nome",
-        "personal_notes",
     )
