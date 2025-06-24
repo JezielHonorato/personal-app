@@ -100,34 +100,9 @@ class Livro(models.Model):
         verbose_name="Ano de Publicação",
     )
 
-    STATUS_CHOICES = [
-        ("Lido", "Lido"),
-        ("Lendo Agora", "Lendo Agora"),
-        ("Quero Ler", "Quero Ler"),
-        ("Abandonado", "Abandonado"),
-    ]
-    status = models.CharField(
-        max_length=15,
-        choices=STATUS_CHOICES,
-        default="Quero Ler",
-        verbose_name="Status de Leitura",
-    )
-    avaliacao = models.IntegerField(
-        choices=[(i, str(i)) for i in range(1, 6)],
-        blank=True,
-        null=True,
-        verbose_name="Sua Avaliação",
-        validators=[MinValueValidator(1), MaxValueValidator(5)],
-    )
-    data_inicio = models.DateField(
-        blank=True,
-        null=True,
-        verbose_name="Data de Início da Leitura",
-    )
-    data_fim = models.DateField(
-        blank=True,
-        null=True,
-        verbose_name="Data de Conclusão",
+    lido = models.BooleanField(
+        default=False,
+        verbose_name="Lido",
     )
     arquivo = models.FileField(
         upload_to="file_livros/arquivos/",
@@ -141,9 +116,6 @@ class Livro(models.Model):
         null=True,
         verbose_name="Capa do Livro",
     )
-
-    data_criacao = models.DateTimeField(auto_now_add=True)
-    data_atualizacao = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.titulo} por {self.autor.nome if self.autor else 'Autor Desconhecido'}"
