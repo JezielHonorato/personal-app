@@ -7,6 +7,7 @@ const routes = [
     { path: '/', name: 'Home', component: Home },
     { path: '/livros', name: 'Livros', component: Livros },
     { path: '/livros/cadastro', name: 'LivrosCadastro', component: LivrosCadastro },
+    { path: '/livros/editar/:id', name: 'LivrosEditar', component: LivrosCadastro, props: true },
     { path: '/:catchAll(.*)', name: 'not-found', component: Home },
 ];
 
