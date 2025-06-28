@@ -17,21 +17,35 @@
             </div>
 
             <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <LivrosResultado :livros="livros" @livroApagado="removerLivro" />
+                <LivrosResultado :livros="livros" @livroApagado="removerLivro" @visualizarLivro="abrirVisualizador" />
                 <div v-if="carregandoLivros" class="text-center text-gray-600 dark:text-gray-400 py-4">Carregando livros...</div>
                 <div v-if="errorLivros" class="text-center text-red-500 py-4">Erro ao carregar livros: {{ errorLivros }}</div>
             </div>
         </div>
+
+        <LivrosConteudo v-if="livroParaVisualizar" :livro="livroParaVisualizar" @close="fecharVisualizador" />
     </div>
 </template>
 
 <script lang="ts" setup>
+    import { ref } from 'vue';
     import { Plus } from 'lucide-vue-next';
     import LivrosPesquisa from '@/components/LivrosPesquisa.vue';
     import LivrosResultado from '@/components/LivrosResultado.vue';
+    import LivrosConteudo from '@/components/LivrosConteudo.vue';
     import { useLivros } from '@/composables/useDatabaseLivros';
+    import type { Livro } from '@/types';
 
     const { livros, carregandoLivros, errorLivros, filtroNome, filtroGenero, filtroPais, filtroAnoInicial, filtroAnoFinal } = useLivros();
+
+    const livroParaVisualizar = ref<Livro | null>(null);
+
+    const abrirVisualizador = (id: number) => {
+        livroParaVisualizar.value = livros.value.find((l) => l.id === id) || null;
+    };
+    const fecharVisualizador = () => {
+        livroParaVisualizar.value = null;
+    };
 
     const pesquisarLivros = ({ nome, genero, pais, anoInicial, anoFinal }: { nome: string; genero: number | null; pais: number | null; anoInicial: number | null; anoFinal: number | null }) => {
         filtroNome.value = nome;
@@ -40,7 +54,6 @@
         filtroAnoInicial.value = anoInicial;
         filtroAnoFinal.value = anoFinal;
     };
-	
     const removerLivro = (id: number) => {
         livros.value = livros.value.filter((l) => l.id !== id);
     };
