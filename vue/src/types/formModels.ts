@@ -27,3 +27,10 @@ export interface GeneroForm {
     id?: number;
     nome: string;
 }
+
+export interface ConteudoLivro {
+    type: 'txt' | 'md' | 'pdf';
+    content?: string;
+    content_html?: string;
+    url?: string;
+}
