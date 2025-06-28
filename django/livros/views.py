@@ -1,5 +1,10 @@
+import os
+import markdown2
 from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from django.db.models import Q
+from django.http import FileResponse, Http404
 from .models import Pais, Autor, Genero, Livro
 from .serializers import (
     PaisSerializer,
@@ -79,3 +84,55 @@ class LivroViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(lido=False)
 
         return queryset
+
+    @action(detail=True, methods=["get"], url_path="conteudo")
+    def conteudo(self, request, pk=None):
+        livro = self.get_object()
+
+        if not livro.arquivo:
+            return Response(
+                {"error": "Este livro não possui um arquivo associado."}, status=404
+            )
+
+        filepath = livro.arquivo.path
+        filename = os.path.basename(filepath)
+
+        try:
+            if filename.endswith(".txt"):
+                with open(filepath, "r", encoding="utf-8") as f:
+                    content = f.read()
+                return Response({"type": "txt", "content": content})
+
+            elif filename.endswith(".md"):
+                with open(filepath, "r", encoding="utf-8") as f:
+                    html_content = markdown2.markdown(f.read())
+                return Response({"type": "md", "content_html": html_content})
+
+            elif filename.endswith(".pdf"):
+                download_url = request.build_absolute_uri(f"../download/")
+                return Response({"type": "pdf", "url": download_url})
+
+            else:
+                return Response(
+                    {"error": "Formato de arquivo não suportado"}, status=400
+                )
+
+        except FileNotFoundError:
+            return Response(
+                {"error": "Arquivo não encontrado no servidor."}, status=404
+            )
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
+    @action(detail=True, methods=["get"], url_path="download")
+    def download(self, request, pk=None):
+        livro = self.get_object()
+        if not livro.arquivo:
+            raise Http404("Arquivo não encontrado para este livro.")
+
+        filepath = livro.arquivo.path
+
+        if os.path.exists(filepath) and filepath.endswith(".pdf"):
+            return FileResponse(open(filepath, "rb"), content_type="application/pdf")
+        else:
+            raise Http404("O arquivo não é um PDF ou não foi encontrado.")
