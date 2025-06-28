@@ -18,7 +18,7 @@
                     <button @click="editarLivro(livro.id)" title="Editar Livro" class="bg-blue-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <Pencil class="w-4 h-4" />
                     </button>
-                    <button v-if="livro.arquivo" title="Abrir Arquivo" class="bg-green-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <button v-if="livro.arquivo" @click="$emit('visualizarLivro', livro.id)" title="Abrir Arquivo" class="bg-green-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-green-500">
                         <FileText class="w-4 h-4" />
                     </button>
                     <button @click="apagarLivro(livro.id)" title="Apagar Livro" class="bg-red-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-red-500">
@@ -35,13 +35,13 @@
     import { FileText, Pencil, Trash2 } from 'lucide-vue-next';
     import { useRouter } from 'vue-router';
     import { useLivros } from '@/composables/useDatabaseLivros';
-    import type { Livro } from '@/types/apiModels';
+    import type { Livro } from '@/types/apiLivroModel';
 
     defineProps<{
         livros: Livro[];
     }>();
-	
-    const emit = defineEmits(['livroApagado']);
+
+    const emit = defineEmits(['livroApagado', 'visualizarLivro']);
 
     const router = useRouter();
     const { delete: deleteLivro } = useLivros();
