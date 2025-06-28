@@ -1,2 +1,2 @@
-export * from './apiModels';
+export * from './apiLivroModel';
 export * from './formModels';
