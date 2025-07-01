@@ -57,8 +57,8 @@ export function useLivroForm(options: UseLivroFormOptions) {
         const colunas: Record<keyof Omit<LivroForm, 'id' | 'arquivo_file' | 'capa_file' | 'capa_url_preview'>, string> = {
             titulo: 'titulo',
             titulo_original: 'titulo_original',
-            autor_id: 'autor',
-            genero_id: 'genero',
+            autor_id: 'autor_id',
+            genero_id: 'genero_id',
             ano_publicacao: 'ano_publicacao',
             lido: 'lido',
         };
