@@ -40,9 +40,9 @@
                     <p>{{ error }}</p>
                 </div>
                 <div v-else-if="data" class="h-full">
-                    <pre v-if="data.type === 'txt'" :style="contentStyle" class="w-full h-full p-6 whitespace-pre-wrap break-words font-mono">{{ data.content }}</pre>
+                    <pre v-if="data.type === 'txt'" :style="contentStyle" class="w-full h-full text-justify p-6 whitespace-pre-wrap break-words font-mono">{{ data.content }}</pre>
 
-                    <div v-if="data.type === 'md'" v-html="data.content_html" :style="contentStyle" class="prose dark:prose-invert max-w-none p-6"></div>
+                    <div v-if="data.type === 'md'" v-html="data.content_html" :style="contentStyle" class="prose text-justify dark:prose-invert max-w-none p-6"></div>
 
                     <div v-if="data.type === 'pdf'" class="w-full h-[80vh]">
                         <iframe :src="data.url" class="w-full h-full border-0" title="Visualizador de PDF"></iframe>
