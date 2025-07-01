@@ -23,6 +23,12 @@ personal/__pycache__
 __pycache__/*
 *.pyc
 
+# Testes
+coverage
+.nyc_output
+cypress/downloads/
+cypress/screenshots/
+cypress/videos/
 
 # Outros
 !.vscode/extensions.json
