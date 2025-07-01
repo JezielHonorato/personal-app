@@ -1,6 +1,6 @@
 <template>
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-50 backdrop-blur-sm transition-opacity duration-300" @click.self="emit('close')">
-        <div class="relative flex flex-col w-11/12 max-w-4xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl m-4 transition-transform duration-300 transform hover:scale-[1.01]">
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-opacity-75 backdrop-blur-sm" @click.self="emit('close')">
+        <div class="relative flex flex-col w-11/12 max-w-5xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-2xl shadow-2xl m-4">
             <header class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 shrink-0">
                 <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
                     <span :title="livro.titulo">{{ livro.titulo }}</span>
@@ -11,17 +11,41 @@
                 </button>
             </header>
 
-            <main class="flex-grow p-6 overflow-auto">
-                <div v-if="isLoading" class="text-center">Carregando conteúdo...</div>
-                <div v-else-if="error" class="text-center text-red-500">
+            <section v-if="data && (data.type === 'txt' || data.type === 'md')" class="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 shrink-0">
+                <div class="flex flex-col">
+                    <label for="fontSize" class="text-xs font-medium text-gray-600 dark:text-gray-400">Tam. Fonte: {{ fontSize }}</label>
+                    <input id="fontSize" type="range" min="12" max="32" step="1" v-model="fontSize" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="lineHeight" class="text-xs font-medium text-gray-600 dark:text-gray-400">Espaçamento: {{ lineHeight }}</label>
+                    <input id="lineHeight" type="range" min="1.2" max="2.5" step="0.1" v-model="lineHeight" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <label for="textColor" class="text-xs font-medium text-gray-600 dark:text-gray-400">Cor do Texto</label>
+                    <input id="textColor" type="color" v-model="textColor" class="w-8 h-8 p-0 bg-transparent border-none cursor-pointer" />
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <label for="backgroundColor" class="text-xs font-medium text-gray-600 dark:text-gray-400">Cor do Fundo</label>
+                    <input id="backgroundColor" type="color" v-model="backgroundColor" class="w-8 h-8 p-0 bg-transparent border-none cursor-pointer" />
+                </div>
+            </section>
+
+            <main class="flex-grow overflow-auto">
+                <div v-if="isLoading" class="text-center p-6">Carregando conteúdo...</div>
+                <div v-else-if="error" class="text-center text-red-500 p-6">
                     <p>Ocorreu um erro:</p>
                     <p>{{ error }}</p>
                 </div>
-                <div v-else-if="data">
-                    <pre v-if="data.type === 'txt'" class="w-full h-full p-4 text-sm whitespace-pre-wrap break-words bg-gray-100 rounded-md dark:bg-gray-900 font-mono">{{ data.content }}</pre>
-                    <div v-if="data.type === 'md'" v-html="data.content_html" class="prose prose-indigo dark:prose-invert max-w-none"></div>
-                    <div v-if="data.type === 'pdf'" class="w-full h-[70vh]">
-                        <iframe :src="data.url" class="w-full h-full border-0 rounded-md" title="Visualizador de PDF"></iframe>
+                <div v-else-if="data" class="h-full">
+                    <pre v-if="data.type === 'txt'" :style="contentStyle" class="w-full h-full p-6 whitespace-pre-wrap break-words font-mono">{{ data.content }}</pre>
+
+                    <div v-if="data.type === 'md'" v-html="data.content_html" :style="contentStyle" class="prose dark:prose-invert max-w-none p-6"></div>
+
+                    <div v-if="data.type === 'pdf'" class="w-full h-[80vh]">
+                        <iframe :src="data.url" class="w-full h-full border-0" title="Visualizador de PDF"></iframe>
                     </div>
                 </div>
             </main>
@@ -30,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-    import { watch } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import { useLivroVisualizador } from '@/composables/useLivroVisualizador';
     import { X } from 'lucide-vue-next';
     import type { Livro } from '@/types';
@@ -42,6 +66,26 @@
     const emit = defineEmits(['close']);
 
     const { data, isLoading, error, fetchConteudo } = useLivroVisualizador();
+
+    const isDarkMode = ref(document.documentElement.classList.contains('dark'));
+
+    const fontSize = ref(16);
+    const lineHeight = ref(1.7);
+    const backgroundColor = ref(isDarkMode.value ? '#111827' : '#FFFFFF');
+    const textColor = ref(isDarkMode.value ? '#F3F4F6' : '#1F2937');
+
+    const contentStyle = computed(() => ({
+        fontSize: `${fontSize.value}px`,
+        lineHeight: lineHeight.value,
+        backgroundColor: backgroundColor.value,
+        color: textColor.value,
+        '--tw-prose-body': textColor.value,
+        '--tw-prose-headings': textColor.value,
+        '--tw-prose-bold': textColor.value,
+        '--tw-prose-invert-body': textColor.value,
+        '--tw-prose-invert-headings': textColor.value,
+        '--tw-prose-invert-bold': textColor.value,
+    }));
 
     watch(
         () => props.livro,
@@ -55,116 +99,38 @@
 </script>
 
 <style>
-    .prose {
-        max-width: 100%;
-        line-height: 1.7;
+    input[type='color'] {
+        border: none;
+        width: 32px;
+        height: 32px;
     }
-
-    .prose img {
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin: 1rem auto;
+    input[type='color']::-webkit-color-swatch-wrapper {
+        padding: 0;
     }
-
-    .prose a {
-        color: #2563eb;
-        text-decoration: underline;
-        transition: color 0.3s;
-    }
-
-    .prose a:hover {
-        color: #1d4ed8;
-    }
-
-    .prose blockquote {
-        border-left: 4px solid #6366f1;
-        padding-left: 1rem;
-        color: #374151;
-        background: #f3f4f6;
-        border-radius: 0.25rem;
-    }
-
-    .dark .prose-invert blockquote {
-        background: #374151;
-        color: #f3f4f6;
-    }
-
-    .prose code {
-        background-color: #f3f4f6;
-        padding: 0.2rem 0.4rem;
-        border-radius: 0.25rem;
-        font-size: 0.9em;
-    }
-
-    .dark .prose-invert code {
-        background-color: #1f2937;
-    }
-
-    .prose pre {
-        background-color: #1f2937;
-        color: #f3f4f6;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        overflow-x: auto;
-    }
-
-    .prose table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .prose th,
-    .prose td {
+    input[type='color']::-webkit-color-swatch {
         border: 1px solid #d1d5db;
-        padding: 0.5rem;
+        border-radius: 50%;
     }
 
-    .dark .prose-invert th,
-    .dark .prose-invert td {
+    .dark input[type='color']::-webkit-color-swatch {
         border-color: #4b5563;
     }
-    .prose h1 {
-        font-size: 2rem;
-        font-weight: 700;
-        color:#1e3a8a;
-        margin-top: 1.5rem;
-        margin-bottom: 0.75rem;
-        line-height: 1.2;
-        border-bottom: 2px solid #c7d2fe;
-        padding-bottom: 0.3rem;
+
+    input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: #4f46e5;
+        cursor: pointer;
+        border-radius: 50%;
     }
 
-    .prose h2 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #1e40af;
-        margin-top: 1.2rem;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-        border-left: 4px solid #93c5fd;
-        padding-left: 0.5rem;
-    }
-
-    .prose h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: #1d4ed8;
-        margin-top: 1rem;
-        margin-bottom: 0.5rem;
-        line-height: 1.4;
-    }
-
-    .dark .prose-invert h1 {
-        color: #bfdbfe;
-        border-bottom: 2px solid #3b82f6;
-    }
-
-    .dark .prose-invert h2 {
-        color: #93c5fd;
-        border-left: 4px solid #60a5fa;
-    }
-
-    .dark .prose-invert h3 {
-        color: #60a5fa;
+    input[type='range']::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: #4f46e5;
+        cursor: pointer;
+        border-radius: 50%;
     }
 </style>
