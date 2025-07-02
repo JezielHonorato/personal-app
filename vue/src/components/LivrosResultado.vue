@@ -5,10 +5,10 @@
 
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <div v-for="livro in livros" :key="livro.id" class="relative group bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-600 transition-transform duration-200 hover:scale-[1.02]">
-                <div class="w-full h-96 mb-4">
+                <div class="w-full max-w-xs mx-auto mb-4 aspect-[2/3]">
                     <img v-if="livro.capa" :src="livro.capa" alt="Capa do livro" class="w-full h-full object-cover rounded-md bg-gray-200 dark:bg-gray-600" />
                     <div v-else class="w-full h-full flex flex-col items-center justify-center bg-gray-200 dark:bg-gray-700 rounded-md text-center p-4">
-                        <BookOpenText/>
+                        <BookOpenText class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-2" />
                         <span class="text-lg font-bold text-gray-500 dark:text-gray-400 truncate">{{ livro.titulo }}</span>
                     </div>
                 </div>
