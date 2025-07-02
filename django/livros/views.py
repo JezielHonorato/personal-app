@@ -105,7 +105,9 @@ class LivroViewSet(viewsets.ModelViewSet):
 
             elif filename.endswith(".md"):
                 with open(filepath, "r", encoding="utf-8") as f:
-                    html_content = markdown2.markdown(f.read())
+                    html_content = markdown2.markdown(
+                        f.read(), extras=["nl2br", "header-ids", "footnotes"]
+                    )
                 return Response({"type": "md", "content_html": html_content})
 
             elif filename.endswith(".pdf"):
