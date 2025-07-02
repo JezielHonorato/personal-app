@@ -133,4 +133,7 @@
         cursor: pointer;
         border-radius: 50%;
     }
+    html {
+        scroll-behavior: smooth;
+    }
 </style>
