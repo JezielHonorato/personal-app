@@ -113,7 +113,7 @@ export function useLivroForm(options: UseLivroFormOptions) {
     };
 
     watch(
-        options.livroParaEditar, // <-- Assista a ref diretamente
+        options.livroParaEditar,
         (livro) => {
             if (livro) {
                 livroForm.value = {
