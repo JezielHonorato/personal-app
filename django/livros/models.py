@@ -27,16 +27,17 @@ class Autor(models.Model):
         max_length=255,
         verbose_name="Nome",
     )
-    data_nascimento = models.DateField(
+    data_nascimento = models.IntegerField(
         blank=True,
         null=True,
         verbose_name="Nascimento",
     )
-    data_obito = models.DateField(
+    data_obito = models.IntegerField(
         blank=True,
         null=True,
         verbose_name="Falecimento",
     )
+
     pais = models.ForeignKey(
         Pais,
         on_delete=models.SET_NULL,
