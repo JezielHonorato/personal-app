@@ -6,8 +6,8 @@ export interface Pais {
 export interface Autor {
     id: number;
     nome: string;
-    data_nascimento?: string | null;
-    data_obito?: string | null;
+    data_nascimento?: number | null;
+    data_obito?: number | null;
     pais?: Pais;
     pais_id?: number | null;
 }
