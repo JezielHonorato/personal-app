@@ -1,8 +1,8 @@
 <template>
 	<Header />
-	<divz>
+	<div>
 		<routerView />
-	</divz>
+	</div>
 </template>
 
 <script lang="ts" setup>
