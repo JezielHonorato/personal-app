@@ -39,7 +39,7 @@
     import { defineProps } from 'vue';
     import { BookOpenText, FileText, Pencil, Trash2 } from 'lucide-vue-next';
     import { useRouter } from 'vue-router';
-    import { useLivros } from '@/composables/useDatabaseLivros';
+    import { useLivros } from '@/composables/useLivrosDatabase';
     import type { Livro } from '@/types/apiLivroModel';
 
     defineProps<{
