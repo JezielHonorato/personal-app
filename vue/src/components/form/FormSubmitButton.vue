@@ -8,6 +8,6 @@
     defineProps<{
         loading: boolean;
         text: string;
-        loadingText?: string;
+        loadingText: string;
     }>();
 </script>
