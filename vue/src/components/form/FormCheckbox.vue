@@ -9,7 +9,7 @@
     defineProps<{
         id: string;
         label: string;
-        modelValue: boolean | undefined;
+        modelValue: boolean;
     }>();
 	
     defineEmits(['update:modelValue']);
