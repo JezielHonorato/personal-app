@@ -5,27 +5,22 @@
 
         <div v-if="previewUrl || fileName" class="mt-4 p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-between">
             <div class="flex items-center">
-                <img v-if="previewUrl" :src="previewUrl" alt="Pré-visualização do arquivo" class="w-16 h-16 object-cover rounded mr-4 border border-gray-200 dark:border-gray-600">
+                <img v-if="previewUrl" :src="previewUrl" alt="Pré-visualização do arquivo" class="w-16 h-16 object-cover rounded mr-4 border border-gray-200 dark:border-gray-600" />
                 <div v-if="fileName" class="text-sm text-gray-700 dark:text-gray-300">
                     <p class="font-semibold break-words">{{ fileName }}</p>
                     <p v-if="fileSize">{{ (fileSize / 1024).toFixed(2) }} KB</p>
                 </div>
             </div>
-            <button
-                @click="clearSelection"
-                type="button"
-                class="ml-4 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
+            <button @click="clearSelection" type="button" class="ml-4 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                <X class="h-5 w-5"/>
             </button>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue'; 
+    import { ref } from 'vue';
+    import { X } from 'lucide-vue-next';
 
     const props = defineProps<{
         id: string;
