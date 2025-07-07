@@ -3,11 +3,11 @@
         <Modal :show="show" @close="$emit('close')" title="Cadastrar Novo Autor">
             <form @submit.prevent="handleSubmit">
                 <div class="space-y-4">
-                    <FormTextInput id="autorNome" label="Nome do Autor" placeholder="Ex: J.R.R. Tolkien" v-model="autorForm.nome" />
+                    <FormTextInput id="autorNome" label="Nome do Autor" placeholder="Nome do autor" v-model="autorForm.nome" />
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormTextInput id="dataNascimento" type="date" label="Data de Nascimento" v-model="autorForm.data_nascimento" />
-                        <FormTextInput id="dataObito" type="date" label="Data de Falecimento" v-model="autorForm.data_obito" />
+                        <FormNumberInput id="anoNascimento" label="Ano de Nascimento" v-model="autorForm.ano_nascimento" />
+                        <FormNumberInput id="anoObito" label="Ano de Falecimento" v-model="autorForm.ano_obito" />
                     </div>
 
                     <div class="flex items-end gap-2">
@@ -20,7 +20,7 @@
                 <p v-if="submitError" class="text-red-500 text-sm mt-4">{{ submitError }}</p>
 
                 <div class="mt-6">
-                    <FormSubmitButton :loading="isSubmitting" text="Salvar Autor" loadingText="Salvando..." class="w-full" />
+                    <FormSubmitButton :loading="carregando" text="Salvar Autor" loadingText="Salvando..." class="w-full" />
                 </div>
             </form>
         </Modal>
@@ -32,9 +32,9 @@
 <script setup lang="ts">
     import { onMounted, ref } from 'vue';
     import Modal from './Modal.vue';
-    import { FormTextInput, FormSubmitButton, FormSelect } from '@/components/form';
-    import { useAutorForm } from '@/composables/useAutorForm';
-    import { usePaises } from '@/composables/useDatabaseLivros';
+    import { FormNumberInput, FormTextInput, FormSubmitButton, FormSelect } from '@/components/form';
+    import { useAutorForm } from '@/composables/useLivrosForm/useAutorForm';
+    import { usePaises } from '@/composables/useLivrosDatabase';
     import PaisCadastroModal from './PaisCadastroModal.vue';
 
     defineProps<{ show: boolean }>();
@@ -46,16 +46,13 @@
     const { data: paises, carregando: carregandoPaises, error: errorPaises, fetch: fetchPaises } = usePaises();
     const {
         autorForm,
-        isSubmitting,
+        carregando,
         submitError,
-        handleSubmit: handleAutorSubmit,
-        resetForm,
+        enviarAutor: enviarAutor,
     } = useAutorForm({
         autorParaEditar: null,
         onSuccess: () => {
-            emit('autorCriado');
             emit('close');
-            resetForm();
         },
     });
 
@@ -67,7 +64,7 @@
             return;
         }
 
-        await handleAutorSubmit();
+        await enviarAutor();
     };
 
     onMounted(() => {
