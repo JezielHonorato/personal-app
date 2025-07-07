@@ -14,7 +14,7 @@
     import { ref } from 'vue';
     import Modal from './Modal.vue';
     import { FormTextInput, FormSubmitButton } from '@/components/form';
-    import { usePaises } from '@/composables/useDatabaseLivros';
+    import { usePaises } from '@/composables/useLivrosDatabase';
     import type { PaisForm } from '@/types';
 
     defineProps<{ show: boolean }>();
