@@ -1,11 +1,7 @@
 <template>
     <section class="pesquisa-livros grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="campos-pesquisa">
-            <label for="pesquisar" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Título ou Autor:</label>
-            <div class="campos-input relative flex items-center">
-                <Search class="material-icons absolute left-3 text-gray-400 dark:text-gray-500" />
-                <input type="search" v-model="queryNome" class="pesquisar pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors duration-200" id="pesquisar" name="pesquisar" autocomplete="off" placeholder="Pesquisar..." />
-            </div>
+			<FormSearchInput id="titulo" label="Título ou Autor" placeholder="Pesquisar..." v-model="queryNome" />
         </div>
 
         <div class="campos-pesquisa">
@@ -31,7 +27,7 @@
         </div>
 
         <div class="campos-pesquisa">
-            <RangeDuplo label="Período:" :min="anoMin" :max="anoMax" v-model:valorInicial="rangeAnoInicial" v-model:valorFinal="rangeAnoFinal" />
+            <FormRangeDuplo label="Período:" :min="anoMin" :max="anoMax" v-model:valorInicial="rangeAnoInicial" v-model:valorFinal="rangeAnoFinal" />
         </div>
     </section>
 </template>
@@ -39,8 +35,8 @@
 <script lang="ts" setup>
     import { ref, watch, onMounted } from 'vue';
     import { ChevronDown, Search } from 'lucide-vue-next';
-    import RangeDuplo from './RangeDuplo.vue';
-    import { useGeneros, usePaises } from '@/composables/useDatabaseLivros';
+    import { FormCheckbox, FormFileInput, FormNumberInput, FormRangeDuplo, FormSearchInput, FormTextInput } from '@/components/form/';
+    import { useGeneros, usePaises } from '@/composables/useLivrosDatabase';
 
     const emit = defineEmits(['pesquisa']);
 
