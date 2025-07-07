@@ -1,6 +1,6 @@
 import { ref, type Ref } from 'vue';
 
-export function useList<T>(req: (params?: any) => Promise<any>) {
+export function useFilter<T>(req: (params?: any) => Promise<any>) {
     const data: Ref<T[]> = ref([]);
     const carregando = ref<boolean>(false);
     const error = ref<string | null>(null);
