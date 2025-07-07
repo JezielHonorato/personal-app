@@ -33,7 +33,7 @@
     import LivrosPesquisa from '@/components/LivrosPesquisa.vue';
     import LivrosResultado from '@/components/LivrosResultado.vue';
     import LivrosConteudo from '@/components/LivrosConteudo.vue';
-    import { useLivros } from '@/composables/useDatabaseLivros';
+    import { useLivros } from '@/composables/useLivrosDatabase';
     import type { Livro } from '@/types';
 
     const { livros, carregandoLivros, errorLivros, filtroNome, filtroGenero, filtroPais, filtroAnoInicial, filtroAnoFinal } = useLivros();
