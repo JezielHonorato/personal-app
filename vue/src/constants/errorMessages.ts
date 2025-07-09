@@ -3,7 +3,7 @@ type ErrorInfo = {
     message: string;
 };
 
-export const ERROR_MESSAGES: Record<number, ErrorInfo> = {
+const errorMessage: Record<number, ErrorInfo> = {
     400: { code: 400, message: 'Requisição inválida. Por favor, verifique os dados enviados.' },
     401: { code: 401, message: 'Não autorizado. Por favor, faça login novamente.' },
     403: { code: 403, message: 'Acesso negado. Você não tem permissão para realizar esta ação.' },
@@ -16,8 +16,8 @@ export const ERROR_MESSAGES: Record<number, ErrorInfo> = {
     503: { code: 503, message: 'Serviço indisponível. O servidor está temporariamente sobrecarregado ou em manutenção.' },
 };
 
-export const getErrorMessage = (statusCode: number, defaultMessage = 'Ocorreu um erro inesperado.'): ErrorInfo => {
-    const error = ERROR_MESSAGES[statusCode];
+export const getErrorMessage = (statusCode: number, defaultMessage: string = 'Ocorreu um erro inesperado.'): ErrorInfo => {
+    const error = errorMessage[statusCode];
 
     if (!error) {
         if (import.meta.env.MODE === 'development') {
