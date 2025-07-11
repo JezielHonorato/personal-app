@@ -15,7 +15,7 @@
     import Modal from './Modal.vue';
     import { FormTextInput, FormSubmitButton } from '@/components/form';
     import { usePaises } from '@/composables/useLivrosDatabase';
-    import type { PaisForm } from '@/types';
+    import type { PaisForm } from '@/features/biblioteca/types';
 
     defineProps<{ show: boolean }>();
     const emit = defineEmits(['close', 'paisCriado']);
