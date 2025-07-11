@@ -1,10 +1,17 @@
-import type { IPais } from '@/features/biblioteca/paises/models/paisModel';
+import type { Pais } from '@/features/biblioteca/paises/models/paisModel';
 
-export interface IAutor {
+export interface Autor {
     id: number;
     nome: string;
     ano_nascimento: number | null;
     ano_obito: number | null;
-    pais: IPais;
-    pais_id: number | null;
+    pais: Pais | null
+}
+
+export interface AutorForm {
+    id: number | null;
+    nome: string;
+    ano_nascimento: number | null;
+    ano_obito: number | null;
+    paisId: number | null;
 }
