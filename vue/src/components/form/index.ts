@@ -1,4 +1,5 @@
 export { default as FormCheckbox } from '@/components/form/FormCheckbox.vue';
+export { default as FormCancelButton } from '@/components/form/FormCancelButton.vue';
 export { default as FormFileInput } from '@/components/form/FormFileInput.vue';
 export { default as FormNumberInput } from '@/components/form/FormNumberInput.vue';
 export { default as FormRangeDuplo } from '@/components/form/FormRangeDuplo.vue';
