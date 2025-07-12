@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label :for="id" class="block text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">{{ label }}</label>
+        <label :for="id" class="block text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200"> {{ label }}: </label>
         <input type="file" :id="id" :accept="tipoArquivo" @change="atualizar" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:file:bg-blue-800 dark:file:text-blue-200 dark:hover:file:bg-blue-700" />
 
         <div v-if="previewUrl || fileName" class="mt-4 p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-between">
@@ -36,7 +36,7 @@
     const fileName = ref<string | null>(null);
     const fileSize = ref<number | null>(null);
 
-    function atualizar(event: Event) {
+    function atualizar(event: Event): void {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0] || null;
 
@@ -60,7 +60,7 @@
         emit('change', file);
     }
 
-    function removerArquivo() {
+    const  removerArquivo =() => {
         const inputElement = document.getElementById(props.id) as HTMLInputElement;
         if (inputElement) {
             inputElement.value = '';
