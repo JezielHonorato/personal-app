@@ -1,7 +1,7 @@
 <template>
     <div>
         <label :for="id" class="block text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">{{ label }}</label>
-        <input type="file" :id="id" :accept="accept" @change="onChange" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:file:bg-blue-800 dark:file:text-blue-200 dark:hover:file:bg-blue-700" />
+        <input type="file" :id="id" :accept="tipoArquivo" @change="atualizar" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 dark:file:bg-blue-800 dark:file:text-blue-200 dark:hover:file:bg-blue-700" />
 
         <div v-if="previewUrl || fileName" class="mt-4 p-3 border rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-between">
             <div class="flex items-center">
@@ -11,8 +11,8 @@
                     <p v-if="fileSize">{{ (fileSize / 1024).toFixed(2) }} KB</p>
                 </div>
             </div>
-            <button @click="clearSelection" type="button" class="ml-4 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
-                <X class="h-5 w-5"/>
+            <button @click="removerArquivo" type="button" class="ml-4 p-1 rounded-full text-gray-500 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500">
+                <X class="h-5 w-5" />
             </button>
         </div>
     </div>
@@ -25,7 +25,7 @@
     const props = defineProps<{
         id: string;
         label: string;
-        accept?: string;
+        tipoArquivo?: string;
     }>();
 
     const emit = defineEmits<{
@@ -36,7 +36,7 @@
     const fileName = ref<string | null>(null);
     const fileSize = ref<number | null>(null);
 
-    function onChange(event: Event) {
+    function atualizar(event: Event) {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0] || null;
 
@@ -54,22 +54,22 @@
                 previewUrl.value = null;
             }
         } else {
-            clearPreviewData();
+            limparPreview();
         }
 
         emit('change', file);
     }
 
-    function clearSelection() {
+    function removerArquivo() {
         const inputElement = document.getElementById(props.id) as HTMLInputElement;
         if (inputElement) {
             inputElement.value = '';
         }
-        clearPreviewData();
+        limparPreview();
         emit('change', null);
     }
 
-    function clearPreviewData() {
+    function limparPreview() {
         previewUrl.value = null;
         fileName.value = null;
         fileSize.value = null;
