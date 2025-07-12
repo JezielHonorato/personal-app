@@ -1,7 +1,9 @@
 <template>
     <div class="flex items-center">
         <input type="checkbox" :id="id" v-model="checkedValue" class="mr-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-        <label :for="id" class="text-sm font-semibold text-gray-800 dark:text-gray-200">{{ label }}</label>
+        <label :for="id" class="text-sm font-semibold text-gray-800 dark:text-gray-200">
+            {{ label }}
+        </label>
     </div>
 </template>
 
