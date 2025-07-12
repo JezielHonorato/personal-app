@@ -1,5 +1,13 @@
-export function validar(value: any): boolean {
-    return !value || (typeof value === 'string' && value.trim() === '') ? false : true;
+export function validarPreencimento(entrada: any): boolean {
+    if (typeof entrada === 'string') {
+        return entrada.trim().length > 0;
+    }
+
+    if (typeof entrada === 'number') {
+        return !isNaN(entrada);
+    }
+
+    return !!entrada;
 }
 
 export function validarNome(string: string): boolean {
