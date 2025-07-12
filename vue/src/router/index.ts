@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { LivrosRoutes } from '@/features/biblioteca/livros/routes';
+import { GenerosRoutes } from '@/features/biblioteca/generos/routes';
 import Home from '@/components/Home.vue';
 
 const routes = [
@@ -9,6 +10,7 @@ const routes = [
         component: Home,
     },
     ...LivrosRoutes,
+	...GenerosRoutes,
     {
         path: '/:catchAll(.*)',
         name: 'not-found',
