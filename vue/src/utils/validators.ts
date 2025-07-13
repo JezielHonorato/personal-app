@@ -1,4 +1,4 @@
-export function validarPreencimento(entrada: any): boolean {
+export function validarPreenchimento(entrada: any): boolean {
     if (typeof entrada === 'string') {
         return entrada.trim().length > 0;
     }
