@@ -7,8 +7,8 @@
 
             <form v-if="!carregando" @submit.prevent="enviarLivro" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <FormTextInput id="titulo" label="Título:" placeholder="Nome do Livro" v-model="livroForm.titulo" required />
-                    <FormTextInput id="titulo_original" label="Título Original:" placeholder="Título original" v-model="livroForm.titulo_original" />
+                    <FormTextInput id="titulo" label="Título" placeholder="Nome do Livro" v-model="livroForm.titulo" required />
+                    <FormTextInput id="titulo_original" label="Título Original" placeholder="Título original" v-model="livroForm.titulo_original" />
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -26,16 +26,16 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <FormFileInput id="arquivo" label="Arquivo do livro:" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo_file" />
-                    <FormFileInput id="capa" label="Capa do livro:" accept="image/*" @change="alterarCapa" :previewUrl="livroForm.capa_preview_url" />
+                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo_file" />
+                    <FormFileInput id="capa" label="Capa do livro" accept="image/*" @change="alterarCapa" :previewUrl="livroForm.capa_preview_url" />
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Livro' : 'Cadastrar Livro'" :habilitado="validarPreencimento(livroForm.titulo)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Livro' : 'Cadastrar Livro'" :habilitado="validarPreenchimento(livroForm.titulo)" />
                     <FormCancelButton />
                 </div>
 
-                <p v-if="erro" class="text-red-600 text-sm mt-6 text-center font-medium">{{ erro }}</p>
+                <FormErro :erro="erro" />
             </form>
 
             <div v-else class="text-center p-8">Carregando dados do livro...</div>
@@ -44,17 +44,17 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import { FormCheckbox, FormFileInput, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput, FormCancelButton } from '@/components/form';
-    import type { Livro, LivroForm } from '../models/livroModel';
+    import { FormCancelButton, FormCheckbox, FormErro, FormFileInput, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
+    import type { Livro, LivroForm } from '../models';
     import { useAutor, useGenero, useLivro } from '../composables';
-    import { validarPreencimento } from '@/utils/validators';
+    import { validarNome, validarPreenchimento } from '@/utils/validators';
 
     const route = useRoute();
 
-    const livroId = route.params.id ? Number(route.params.id) : null;
-    const modoEditar = ref(!!livroId);
+    const livroId: number | null = route.params.id ? Number(route.params.id) : null;
+    const modoEditar: Ref<boolean> = ref(!!livroId);
 
     const { livro, carregando, erro, getLivro, getLivros, createLivro, updateLivro } = useLivro();
 
@@ -88,11 +88,12 @@
             capa_preview_url: livro.capa,
         };
     }
-    const alterarArquivo = (file: File | null) => {
-        livroForm.value.arquivo_file = file;
-    };
 
-    const alterarCapa = (file: File | null) => {
+    function alterarArquivo(file: File | null): void {
+        livroForm.value.arquivo_file = file;
+    }
+
+    function alterarCapa(file: File | null): void {
         if (livroForm.value.capa_preview_url?.startsWith('blob:')) {
             URL.revokeObjectURL(livroForm.value.capa_preview_url);
         }
@@ -104,11 +105,16 @@
             livroForm.value.capa_file = null;
             livroForm.value.capa_preview_url = null;
         }
-    };
+    }
 
-    const enviarLivro = async () => {
+    async function enviarLivro(): Promise<void> {
+        if (!validarNome(livroForm.value.titulo)) {
+            erro.value = 'O título do livro deve ser composto por letras e/ou pontos!';
+            return;
+        }
+
         try {
-			console.log('here')
+            console.log('here');
             if (livroId) {
                 await updateLivro(livroId, livroForm.value);
             } else {
@@ -119,7 +125,7 @@
         } catch (error) {
             console.error('Falha ao salvar o livro:', error);
         }
-    };
+    }
 
     onMounted(async () => {
         getAutores();
