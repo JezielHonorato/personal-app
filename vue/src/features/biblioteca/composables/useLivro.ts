@@ -1,15 +1,15 @@
-import { ref, computed } from 'vue';
+import { ref, computed, type Ref } from 'vue';
 import { livroService } from '../services';
 import type { Livro, LivroForm, LivroFiltro, LivroConteudo } from '../models';
 
 export function useLivro() {
-    const livros = ref<Livro[]>([]);
-    const livro = ref<Livro | null>(null);
-    const conteudo = ref<LivroConteudo | null>(null);
-    const carregando = ref(false);
-    const erro = ref<string | null>(null);
+    const livro: Ref<Livro | null> = ref<Livro | null>(null);
+    const livros: Ref<Livro[]> = ref<Livro[]>([]);
+    const conteudo: Ref<LivroConteudo | null> = ref<LivroConteudo | null>(null);
+    const carregando: Ref<boolean> = ref(false);
+    const erro: Ref<string | null> = ref<string | null>(null);
 
-    const filtros = ref<LivroFiltro>({
+    const filtros: Ref<LivroFiltro> = ref<LivroFiltro>({
         tituloAutor: '',
         anoInicial: null,
         anoFinal: null,
@@ -17,7 +17,7 @@ export function useLivro() {
         paisId: null,
     });
 
-    const getLivros = async (): Promise<void> => {
+    async function getLivros(): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -28,9 +28,9 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const getLivro = async (id: number): Promise<void> => {
+    async function getLivro(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -41,9 +41,9 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const createLivro = async (data: LivroForm): Promise<void> => {
+    async function createLivro(data: LivroForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -54,9 +54,9 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const updateLivro = async (id: number, data: LivroForm): Promise<void> => {
+    async function updateLivro(id: number, data: LivroForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -67,9 +67,9 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const deleteLivro = async (id: number): Promise<void> => {
+    async function deleteLivro(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -80,13 +80,9 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const aplicarFiltros = (novosFiltros: Partial<LivroFiltro>): void => {
-        filtros.value = { ...filtros.value, ...novosFiltros };
-    };
-
-    const getConteudoLivro = async (id: number): Promise<void> => {
+    async function getConteudoLivro(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -97,7 +93,11 @@ export function useLivro() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
+
+    function aplicarFiltros(novosFiltros: Partial<LivroFiltro>): void {
+        filtros.value = { ...filtros.value, ...novosFiltros };
+    }
 
     const livrosFiltrados = computed(() => {
         return livros.value.filter((livro) => {
