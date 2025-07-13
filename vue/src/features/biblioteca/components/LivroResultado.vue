@@ -55,7 +55,7 @@
         router.push(`/livros/cadastro/${id}`);
     }
 
-    const apagarLivro = async (id: number) => {
+    async function apagarLivro(id: number) {
         if (!window.confirm('Tem certeza que deseja apagar este livro? Esta ação não pode ser desfeita.')) {
             return;
         }
@@ -67,5 +67,5 @@
         } catch (error) {
             console.error('Falha ao apagar o livro:', error);
         }
-    };
+    }
 </script>
