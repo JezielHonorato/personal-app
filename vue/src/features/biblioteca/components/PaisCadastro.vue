@@ -2,18 +2,18 @@
     <div class="min-h-screen w-full bg-white dark:bg-gray-900">
         <div class="container mx-auto px-4 py-8 max-w-2xl">
             <h2 class="text-3xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">
-                {{ modoEditar ? 'Editar Gênero' : 'Cadastrar Novo Gênero' }}
+                {{ modoEditar ? 'Editar Pais' : 'Cadastrar Novo Pais' }}
             </h2>
 
-            <form v-if="!carregando" @submit.prevent="enviarGenero" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                <FormTextInput id="nome" label="Gênero" placeholder="Nome do Gênero" v-model="generoForm.nome" required />
+            <form v-if="!carregando" @submit.prevent="enviarPais" class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                <FormTextInput id="nome" label="Pais" placeholder="Nome do Pais" v-model="paisForm.nome" required />
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Livro' : 'Cadastrar Livro'" :desabilitado="validarPreencimento(generoForm.nome)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Pais' : 'Cadastrar Pais'" :desabilitado="validarPreenchimento(paisForm.nome)" />
                     <FormCancelButton />
                 </div>
 
-                <p v-if="erro" class="text-red-600 text-sm mt-6 text-center font-medium">{{ erro }}</p>
+                <FormErro :erro="erro" />
             </form>
 
             <div v-else class="text-center p-8">Carregando dados do gênero...</div>
@@ -22,54 +22,59 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import { FormCancelButton, FormSubmitButton, FormTextInput } from '@/components/form';
-    import type { Genero, GeneroForm } from '../models';
-    import { useGenero } from '../composables';
-    import { validarPreencimento } from '@/utils/validators';
+    import { FormCancelButton, FormErro, FormSubmitButton, FormTextInput } from '@/components/form';
+    import type { Pais, PaisForm } from '../models';
+    import { usePais } from '../composables';
+    import { validarPreenchimento, validarNome } from '@/utils/validators';
 
     const route = useRoute();
 
-    const generoId = route.params.id ? Number(route.params.id) : null;
-    const modoEditar = ref(!!generoId);
+    const paisId: number | null = route.params.id ? Number(route.params.id) : null;
+    const modoEditar: Ref<boolean> = ref(!!paisId);
 
-    const { genero, carregando, erro, getGenero, createGenero, updateGenero } = useGenero();
+    const { pais, carregando, erro, getPais, createPais, updatePais } = usePais();
 
-    const generoForm = ref<GeneroForm>({
+    const paisForm: Ref<PaisForm> = ref<PaisForm>({
         id: null,
         nome: '',
     });
 
-    function mapearLivroParaForm(genero: Genero): GeneroForm {
+    function mapearPaisParaForm(pais: Pais): PaisForm {
         return {
-            id: genero.id,
-            nome: genero.nome,
+            id: pais.id,
+            nome: pais.nome,
         };
     }
 
-    const enviarGenero = async () => {
+    async function enviarPais() {
+        if (!validarNome(paisForm.value.nome)) {
+            erro.value = 'O título do livro deve ser composto por letras e/ou pontos!';
+            return;
+        }
+
         try {
-            if (generoId) {
-                await updateGenero(generoId, generoForm.value);
+            if (paisId) {
+                await updatePais(paisId, paisForm.value);
             } else {
-                await createGenero(generoForm.value);
+                await createPais(paisForm.value);
             }
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o gênero:', error);
         }
-    };
+    }
 
     onMounted(async () => {
-        if (generoId) {
+        if (paisId) {
             try {
-                await getGenero(generoId);
-                if (genero.value) {
-                    generoForm.value = mapearLivroParaForm(genero.value);
+                await getPais(paisId);
+                if (pais.value) {
+                    paisForm.value = mapearPaisParaForm(pais.value);
                 }
             } catch (error) {
-                console.error('Erro ao buscar livro para edição:', error);
+                console.error('Erro ao buscar pais para edição:', error);
             }
         }
     });
