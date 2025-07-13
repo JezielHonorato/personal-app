@@ -20,11 +20,11 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Autor' : 'Cadastrar Autor'" :desabilitado="validarPreencimento(autorForm.nome)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Autor' : 'Cadastrar Autor'" :desabilitado="validarPreenchimento(autorForm.nome)" />
                     <FormCancelButton />
                 </div>
 
-                <p v-if="erro" class="text-red-600 text-sm mt-6 text-center font-medium">{{ erro }}</p>
+                <FormErro :erro="erro" />
             </form>
 
             <div v-else class="text-center p-8">Carregando dados do autor...</div>
@@ -33,22 +33,22 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import { FormCancelButton, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
+    import { FormCancelButton, FormErro, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
     import type { Autor, AutorForm } from '../models/autorModel';
     import { useAutor, usePais } from '../composables';
-    import { validarPreencimento } from '@/utils/validators';
+    import { validarPreenchimento } from '@/utils/validators';
 
     const route = useRoute();
 
-    const autorId = route.params.id ? Number(route.params.id) : null;
-    const modoEditar = ref(!!autorId);
+    const autorId: number | null = route.params.id ? Number(route.params.id) : null;
+    const modoEditar: Ref<boolean> = ref(!!autorId);
 
     const { paises, carregando: carregandoPais, erro: erroPais, getPaises } = usePais();
     const { autor, carregando, erro, getAutor, getAutores, createAutor, updateAutor } = useAutor();
 
-    const autorForm = ref<AutorForm>({
+    const autorForm: Ref<AutorForm> = ref<AutorForm>({
         id: null,
         nome: '',
         ano_nascimento: null,
@@ -66,7 +66,7 @@
         };
     }
 
-    const enviarAutor = async () => {
+    async function enviarAutor(): Promise<void> {
         try {
             if (autorId) {
                 await updateAutor(autorId, autorForm.value);
@@ -78,7 +78,7 @@
         } catch (error) {
             console.error('Falha ao salvar o autor:', error);
         }
-    };
+    }
 
     onMounted(async () => {
         getPaises();
