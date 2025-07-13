@@ -1,14 +1,14 @@
-import { ref } from 'vue';
-import { paisService } from '../services/paisService';
-import type { Pais, PaisForm } from '../models/paisModel';
+import { ref, type Ref } from 'vue';
+import { paisService } from '../services';
+import type { Pais, PaisForm } from '../models';
 
 export function usePais() {
-    const paises = ref<Pais[]>([]);
-    const pais = ref<Pais | null>(null);
-    const carregando = ref(false);
-    const erro = ref<string | null>(null);
+    const pais: Ref<Pais | null> = ref<Pais | null>(null);
+    const paises: Ref<Pais[]> = ref<Pais[]>([]);
+    const carregando: Ref<boolean> = ref(false);
+    const erro: Ref<string | null> = ref<string | null>(null);
 
-    const getPaises = async (): Promise<void> => {
+    async function getPaises(): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -19,9 +19,9 @@ export function usePais() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const getPais = async (id: number): Promise<void> => {
+    async function getPais(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -32,9 +32,9 @@ export function usePais() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const createPais = async (data: PaisForm): Promise<void> => {
+    async function createPais(data: PaisForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -45,9 +45,9 @@ export function usePais() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const updatePais = async (id: number, data: PaisForm): Promise<void> => {
+    async function updatePais(id: number, data: PaisForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -58,9 +58,9 @@ export function usePais() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const deletePais = async (id: number): Promise<void> => {
+    async function deletePais(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -71,7 +71,7 @@ export function usePais() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
     return {
         pais,
