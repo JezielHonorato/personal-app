@@ -1,14 +1,14 @@
-import { ref } from 'vue';
-import { autorService } from '../services/autorService';
-import type { Autor, AutorForm } from '../models/autorModel';
+import { ref, type Ref } from 'vue';
+import { autorService } from '../services';
+import type { Autor, AutorForm } from '../models';
 
 export function useAutor() {
-    const autores = ref<Autor[]>([]);
-    const autor = ref<Autor | null>(null);
-    const carregando = ref(false);
-    const erro = ref<string | null>(null);
+    const autor: Ref<Autor | null> = ref<Autor | null>(null);
+    const autores: Ref<Autor[]> = ref<Autor[]>([]);
+    const carregando: Ref<boolean> = ref(false);
+    const erro: Ref<string | null> = ref<string | null>(null);
 
-    const getAutores = async (): Promise<void> => {
+    async function getAutores(): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -19,9 +19,9 @@ export function useAutor() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const getAutor = async (id: number): Promise<void> => {
+    async function getAutor(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -32,9 +32,9 @@ export function useAutor() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const createAutor = async (data: AutorForm): Promise<void> => {
+    async function createAutor(data: AutorForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -45,9 +45,9 @@ export function useAutor() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const updateAutor = async (id: number, data: AutorForm): Promise<void> => {
+    async function updateAutor(id: number, data: AutorForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -58,9 +58,9 @@ export function useAutor() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const deleteAutor = async (id: number): Promise<void> => {
+    async function deleteAutor(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -71,7 +71,7 @@ export function useAutor() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
     return {
         autor,
