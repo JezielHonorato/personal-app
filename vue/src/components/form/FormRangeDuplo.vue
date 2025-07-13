@@ -1,7 +1,7 @@
 <template>
     <div>
         <section class="range-value-input flex justify-between items-center mb-2">
-            <p class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ label }}</p>
+            <p class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ label }}:</p>
             <p class="valores-input text-sm text-gray-700 dark:text-gray-300 font-semibold">
                 <span class="valor_input">{{ novoValorInicial }}</span> - <span class="valor_input">{{ novoValorFinal }}</span>
             </p>
@@ -14,6 +14,8 @@
             <input type="range" :min="min" :max="max" v-model.number="novoValorInicial" class="Periodo absolute w-full h-full appearance-none bg-transparent outline-none z-10" />
             <input type="range" :min="min" :max="max" v-model.number="novoValorFinal" class="Periodo absolute w-full h-full appearance-none bg-transparent outline-none z-10" />
         </section>
+
+        <p v-if="novoValorInicial != null" @click="zerar" class="text-blue-600 hover:text-blue-700 mt-2">Zerar {{ label }}</p>
     </div>
 </template>
 
@@ -42,8 +44,8 @@
 
     const progressStyle = computed(() => {
         const range = props.max - props.min;
-        const visualStart = Math.min(novoValorInicial.value ?? 1, novoValorFinal.value ?? 2);
-        const visualEnd = Math.max(novoValorInicial.value ?? 1, novoValorFinal.value ?? 2);
+        const visualStart = Math.min(novoValorInicial.value ?? 0, novoValorFinal.value ?? 100);
+        const visualEnd = Math.max(novoValorInicial.value ?? 0, novoValorFinal.value ?? 100);
 
         const left = novoValorInicial.value && novoValorFinal.value ? ((visualStart - props.min) / range) * 100 : 50;
         const width = novoValorInicial.value && novoValorFinal.value ? ((visualEnd - visualStart) / range) * 100 : 0;
@@ -56,6 +58,11 @@
             width: `${width}%`,
         };
     });
+
+    function zerar() {
+        novoValorInicial.value = null;
+        novoValorFinal.value = null;
+    }
 </script>
 
 <style scoped>
