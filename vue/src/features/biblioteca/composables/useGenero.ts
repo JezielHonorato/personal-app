@@ -1,14 +1,14 @@
-import { ref } from 'vue';
-import { generoService } from '../services/generoService';
-import type { Genero, GeneroForm } from '../models/generoModel';
+import { ref, type Ref } from 'vue';
+import { generoService } from '../services';
+import type { Genero, GeneroForm } from '../models';
 
 export function useGenero() {
-    const generos = ref<Genero[]>([]);
-    const genero = ref<Genero | null>(null);
-    const carregando = ref(false);
-    const erro = ref<string | null>(null);
+    const genero: Ref<Genero | null> = ref<Genero | null>(null);
+    const generos: Ref<Genero[]> = ref<Genero[]>([]);
+    const carregando: Ref<boolean> = ref(false);
+    const erro: Ref<string | null> = ref<string | null>(null);
 
-    const getGeneros = async (): Promise<void> => {
+    async function getGeneros(): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -19,9 +19,9 @@ export function useGenero() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const getGenero = async (id: number): Promise<void> => {
+    async function getGenero(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -32,9 +32,9 @@ export function useGenero() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const createGenero = async (data: GeneroForm): Promise<void> => {
+    async function createGenero(data: GeneroForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -45,9 +45,9 @@ export function useGenero() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const updateGenero = async (id: number, data: GeneroForm): Promise<void> => {
+    async function updateGenero(id: number, data: GeneroForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -58,9 +58,9 @@ export function useGenero() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
-    const deleteGenero = async (id: number): Promise<void> => {
+    async function deleteGenero(id: number): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -71,7 +71,7 @@ export function useGenero() {
         } finally {
             carregando.value = false;
         }
-    };
+    }
 
     return {
         genero,
