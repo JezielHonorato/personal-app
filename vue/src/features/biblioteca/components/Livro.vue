@@ -6,7 +6,7 @@
             </header>
 
             <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
-                <LivroPesquisa @pesquisa="aplicarFiltros" />
+                <LivroPesquisa @pesquisa="aplicarFiltros" :anoMin="anoMin" :anoMax="anoMax" />
             </div>
 
             <div class="flex justify-center mb-12 mt-8">
@@ -24,13 +24,11 @@
         </div>
 
         <LivroConteudo v-if="livroParaVisualizar" :livro="livroParaVisualizar" @close="fecharVisualizador" />
-
-        <RouterView />
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { Plus } from 'lucide-vue-next';
     import { LivroConteudo, LivroPesquisa, LivroResultado } from '../components';
     import { useLivro } from '../composables';
@@ -47,6 +45,16 @@
     function fecharVisualizador(): void {
         livroParaVisualizar.value = null;
     }
+
+    const anoMin = computed(() => {
+        if (!livros.value || livros.value.length === 0) return 0;
+        return Math.min(...livros.value.map((l) => l.ano_publicacao ?? Infinity));
+    });
+
+    const anoMax = computed(() => {
+        if (!livros.value || livros.value.length === 0) return new Date().getFullYear();
+        return Math.max(...livros.value.map((l) => l.ano_publicacao ?? -Infinity));
+    });
 
     onMounted(() => {
         getLivros();
