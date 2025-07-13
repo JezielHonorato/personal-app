@@ -9,11 +9,11 @@
                 <FormTextInput id="nome" label="Gênero" placeholder="Nome do Gênero" v-model="generoForm.nome" required />
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Livro' : 'Cadastrar Livro'" :desabilitado="validarPreencimento(generoForm.nome)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Livro' : 'Cadastrar Livro'" :desabilitado="validarPreenchimento(generoForm.nome)" />
                     <FormCancelButton />
                 </div>
 
-                <p v-if="erro" class="text-red-600 text-sm mt-6 text-center font-medium">{{ erro }}</p>
+                <FormErro :erro="erro" />
             </form>
 
             <div v-else class="text-center p-8">Carregando dados do gênero...</div>
@@ -22,17 +22,17 @@
 </template>
 
 <script setup lang="ts">
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
-    import { FormCancelButton, FormSubmitButton, FormTextInput } from '@/components/form';
+    import { FormCancelButton, FormErro, FormSubmitButton, FormTextInput } from '@/components/form';
     import type { Genero, GeneroForm } from '../models';
     import { useGenero } from '../composables';
-    import { validarPreencimento } from '@/utils/validators';
+    import { validarPreenchimento } from '@/utils/validators';
 
     const route = useRoute();
 
-    const generoId = route.params.id ? Number(route.params.id) : null;
-    const modoEditar = ref(!!generoId);
+    const generoId: number | null = route.params.id ? Number(route.params.id) : null;
+    const modoEditar: Ref<boolean> = ref(!!generoId);
 
     const { genero, carregando, erro, getGenero, getGeneros, createGenero, updateGenero } = useGenero();
 
@@ -48,7 +48,7 @@
         };
     }
 
-    const enviarGenero = async () => {
+    async function enviarGenero(): Promise<void> {
         try {
             if (generoId) {
                 await updateGenero(generoId, generoForm.value);
@@ -60,7 +60,7 @@
         } catch (error) {
             console.error('Falha ao salvar o gênero:', error);
         }
-    };
+    }
 
     onMounted(async () => {
         if (generoId) {
