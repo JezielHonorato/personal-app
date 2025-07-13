@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getErrorMessage } from '@/constants/errorMessages';
+import { getMensagemErro } from '@/constants/errorMessages';
 
 export const api = axios.create({
     baseURL: 'http://127.0.0.1:8000/api/',
@@ -16,7 +16,7 @@ api.interceptors.response.use(
                 return Promise.reject(new Error(backendMessage));
             }
 
-            const genericError = getErrorMessage(error.response.status);
+            const genericError = getMensagemErro(error.response.status);
             return Promise.reject(new Error(genericError.message));
         }
 
