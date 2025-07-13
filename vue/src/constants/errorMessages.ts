@@ -16,7 +16,7 @@ const errorMessage: Record<number, ErrorInfo> = {
     503: { code: 503, message: 'Serviço indisponível. O servidor está temporariamente sobrecarregado ou em manutenção.' },
 };
 
-export const getErrorMessage = (statusCode: number, defaultMessage: string = 'Ocorreu um erro inesperado.'): ErrorInfo => {
+export function getMensagemErro(statusCode: number, defaultMessage: string = 'Ocorreu um erro inesperado.'): ErrorInfo {
     const error = errorMessage[statusCode];
 
     if (!error) {
@@ -28,4 +28,4 @@ export const getErrorMessage = (statusCode: number, defaultMessage: string = 'Oc
     }
 
     return error;
-};
+}
