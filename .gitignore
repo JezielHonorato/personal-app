@@ -40,3 +40,4 @@ cypress/videos/
 *.njsproj
 *.sln
 *.sw?
+*.sqlite3
