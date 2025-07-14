@@ -17,6 +17,7 @@ dist-ssr
 # Meus Arquivos
 assets/*
 db.sqlite3
+.env
 
 # Django
 personal/__pycache__
