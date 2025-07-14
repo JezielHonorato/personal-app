@@ -118,13 +118,13 @@ class Livro(models.Model):
         verbose_name="Lido",
     )
     arquivo = models.FileField(
-        upload_to="file_livros/arquivos/",
+        upload_to="livros/arquivos/",
         blank=True,
         null=True,
         verbose_name="Arquivo",
     )
     capa = models.ImageField(
-        upload_to="file_livros/capas/",
+        upload_to="livros/capas/",
         blank=True,
         null=True,
         verbose_name="Capa do Livro",
@@ -137,7 +137,7 @@ class Livro(models.Model):
         nome_arquivo_antigo = os.path.basename(campo_arquivo.name)
         extensao = os.path.splitext(nome_arquivo_antigo)[1]
         novo_nome = f"{self.pk}-{slugify(self.titulo)}{extensao}"
-        return os.path.join("file_livros", subpasta, novo_nome)
+        return os.path.join("livros", subpasta, novo_nome)
 
     def _renomear_arquivo_no_storage(self, caminho_antigo, novo_caminho):
         if default_storage.exists(caminho_antigo):
