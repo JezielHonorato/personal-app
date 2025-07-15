@@ -114,7 +114,6 @@
         }
 
         try {
-            console.log('here');
             if (livroId) {
                 await updateLivro(livroId, livroForm.value);
             } else {
