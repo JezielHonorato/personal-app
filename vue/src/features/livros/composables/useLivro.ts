@@ -111,8 +111,6 @@ export function useLivro() {
 
             const filtroAno = (!filtro.anoInicial || (livro.ano_publicacao && livro.ano_publicacao >= filtro.anoInicial)) && (!filtro.anoFinal || (livro.ano_publicacao && livro.ano_publicacao <= filtro.anoFinal));
 
-            console.log(filtro.anoInicial);
-
             return filtroTituloAutor && filtroGenero && filtroPais && filtroAno;
         });
     });
