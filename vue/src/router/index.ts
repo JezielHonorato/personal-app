@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { BibliotecaRoutes } from '@/features/biblioteca/router';
+import { BibliotecaRoutes } from '@/features/livros/router';
 import Home from '@/components/Home.vue';
 
 const routes = [
