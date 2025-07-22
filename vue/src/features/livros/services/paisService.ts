@@ -7,4 +7,4 @@ class PaisService extends CrudService<Pais, PaisForm> {
     }
 }
 
-export const paisService = new PaisService();
+export const paisService: PaisService = new PaisService();
