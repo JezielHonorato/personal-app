@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { BibliotecaRoutes } from '@/features/livros/router';
+import { LivrosRoutes } from '@/features/livros/router';
 import Home from '@/components/Home.vue';
 
 const routes = [
@@ -8,7 +8,7 @@ const routes = [
         name: 'Home',
         component: Home,
     },
-    ...BibliotecaRoutes,
+    ...LivrosRoutes,
     {
         path: '/:catchAll(.*)',
         name: 'not-found',
