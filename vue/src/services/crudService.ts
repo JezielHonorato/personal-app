@@ -3,10 +3,11 @@ import { api } from '@/config/axios';
 export type QueryParams = Record<string, any>;
 
 export interface InterfaceCrudService<InterfaceModel, InterfaceForm> {
-    getAll(params?: QueryParams): Promise<InterfaceModel[]>;
+    //getAll(params?: QueryParams): Promise<InterfaceModel[]>;
+    getAll(): Promise<InterfaceModel[]>;
     getById(id: number): Promise<InterfaceModel>;
-    create(data: InterfaceForm): Promise<InterfaceModel>;
-    update(id: number, data: InterfaceForm): Promise<InterfaceModel>;
+    create(data: InterfaceForm): Promise<void>;
+    update(id: number, data: InterfaceForm): Promise<void>;
     delete(id: number): Promise<void>;
 }
 
@@ -34,14 +35,12 @@ export abstract class CrudService<InterfaceModel, InterfaceForm> implements Inte
         return response.data;
     }
 
-    async create(data: InterfaceForm): Promise<InterfaceModel> {
-        const response = await api.post<InterfaceModel>(`/${this.endpoint}/`, data);
-        return response.data;
+    async create(data: InterfaceForm): Promise<void> {
+        await api.post<InterfaceModel>(`/${this.endpoint}/`, data);
     }
 
-    async update(id: number, data: InterfaceForm): Promise<InterfaceModel> {
-        const response = await api.put<InterfaceModel>(`/${this.endpoint}/${id}/`, data);
-        return response.data;
+    async update(id: number, data: InterfaceForm): Promise<void> {
+        await api.put<InterfaceModel>(`/${this.endpoint}/${id}/`, data);
     }
 
     async delete(id: number): Promise<void> {
