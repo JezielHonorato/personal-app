@@ -13,4 +13,4 @@ class LivroService extends CrudService<Livro, LivroForm> {
     }
 }
 
-export const livroService = new LivroService();
+export const livroService: LivroService = new LivroService();
