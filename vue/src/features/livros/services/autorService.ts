@@ -7,4 +7,4 @@ class AutorService extends CrudService<Autor, AutorForm> {
     }
 }
 
-export const autorService = new AutorService();
+export const autorService: AutorService = new AutorService();
