@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 
 import { Livro, LivroCadastro, AutorCadastro, GeneroCadastro, PaisCadastro } from './components';
 
-export const BibliotecaRoutes: RouteRecordRaw[] = [
+export const LivrosRoutes: RouteRecordRaw[] = [
     {
         path: '/livros',
         name: 'Livros',
