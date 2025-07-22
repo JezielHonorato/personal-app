@@ -97,21 +97,21 @@
     const telaCheia = ref(false);
     const barraFerramenta = ref(true);
 
-    const esconderBarraFerramenta = () => {
+    function esconderBarraFerramenta() {
         barraFerramenta.value = !barraFerramenta.value;
-    };
+    }
 
-    const aplicarTelaCheia = () => {
+    function aplicarTelaCheia() {
         if (!document.fullscreenElement) {
             conteudoLivro.value?.requestFullscreen();
         } else {
             document.exitFullscreen();
         }
-    };
+    }
 
-    const alterarTelaCheia = () => {
+    function alterarTelaCheia() {
         telaCheia.value = !!document.fullscreenElement;
-    };
+    }
 
     onMounted(() => {
         document.addEventListener('fullscreenchange', alterarTelaCheia);
