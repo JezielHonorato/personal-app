@@ -1,4 +1,4 @@
-import type { Pais } from '@/features/biblioteca/models/paisModel';
+import type { Pais } from '../models';
 
 export interface Autor {
     id: number;
