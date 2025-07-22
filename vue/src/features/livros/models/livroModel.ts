@@ -1,5 +1,5 @@
-import type { Autor } from '@/features/biblioteca/models/autorModel';
-import type { Genero } from '@/features/biblioteca/models/generoModel';
+import type { Autor } from '../models';
+import type { Genero } from '../models';
 
 export interface Livro {
     id: number;
@@ -9,7 +9,6 @@ export interface Livro {
     lido: boolean;
     arquivo: string | null;
     capa: string | null;
-
     autor: Autor | null;
     genero: Genero | null;
 }
@@ -37,6 +36,6 @@ export interface LivroFiltro {
 export interface LivroConteudo {
     type: 'txt' | 'md' | 'pdf';
     content?: string;
-	content_html?: string;
+    content_html?: string;
     url?: string;
 }
