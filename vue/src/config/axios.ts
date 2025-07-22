@@ -21,27 +21,17 @@ api.interceptors.response.use(
             return Promise.reject(new Error(genericError.message));
         }
 
-        return Promise.reject(error);
+        return Promise.reject(new Error('Erro de conexão com o servidor.'));
     }
 );
 
 function procurarMensagemErro(data: any): string[] {
     const mensagens: string[] = [];
 
-    if (data.errors && typeof data.errors === 'object') {
-        Object.values<string[]>(data.errors).forEach((fieldErrors) => {
-            if (Array.isArray(fieldErrors)) {
-                mensagens.push(...fieldErrors);
-            }
-        });
-    } else if (typeof data === 'object' && !Array.isArray(data)) {
-        Object.values<any>(data).forEach((fieldErrors) => {
-            if (Array.isArray(fieldErrors)) {
-                mensagens.push(...fieldErrors);
-            }
-        });
-    } else {
-        return [];
+    if (data?.errors?.details && Array.isArray(data.errors.details)) {
+        mensagens.push(...data.errors.details.filter((item: string) => typeof item === 'string'));
+    } else if (typeof data?.message === 'string') {
+        mensagens.push(data.message);
     }
 
     return mensagens;
