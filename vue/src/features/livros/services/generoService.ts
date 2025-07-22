@@ -7,4 +7,4 @@ class GeneroService extends CrudService<Genero, GeneroForm> {
     }
 }
 
-export const generoService = new GeneroService();
+export const generoService: GeneroService = new GeneroService();
