@@ -13,5 +13,5 @@ export interface AutorForm {
     nome: string;
     ano_nascimento: number | null;
     ano_obito: number | null;
-    paisId: number | null;
+    pais_id: number | null;
 }
