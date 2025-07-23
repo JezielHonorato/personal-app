@@ -11,6 +11,6 @@ export function validarPreenchimento(entrada: any): boolean {
 }
 
 export function validarNome(string: string): boolean {
-    const nameRegex: RegExp = /^(?=.*[a-zA-Z])[a-zA-Z .]+$/;
+    const nameRegex: RegExp = /^(?=.*\p{L})[\p{L} .]+$/u;
     return nameRegex.test(string);
 }
