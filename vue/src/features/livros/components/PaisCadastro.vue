@@ -9,7 +9,7 @@
                 <FormTextInput id="nome" label="Pais" placeholder="Nome do Pais" v-model="paisForm.nome" required />
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Pais' : 'Cadastrar Pais'" :desabilitado="validarPreenchimento(paisForm.nome)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Pais' : 'Cadastrar Pais'" :habilitado="validarPreenchimento(paisForm.nome)" />
                     <FormCancelButton />
                 </div>
 
