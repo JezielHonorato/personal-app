@@ -13,10 +13,10 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="autor" label="Autor" placeholder="Selecione um autor" :options="autores" v-model="livroForm.autorId" :carregando="carregandoAutores" :erro="erroAutores" cadastro="AutorCadastro" />
+                        <FormSelect class="flex-grow" id="autor" label="Autor" placeholder="Selecione um autor" :options="autores" v-model="livroForm.autor_id" :carregando="carregandoAutores" :erro="erroAutores" cadastro="AutorCadastro" />
                     </div>
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Selecione um gênero" :options="generos" v-model="livroForm.generoId" cadastro="GeneroCadastro" :carregando="carregandoGeneros" :erro="erroGeneros" />
+                        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Selecione um gênero" :options="generos" v-model="livroForm.genero_id" cadastro="GeneroCadastro" :carregando="carregandoGeneros" :erro="erroGeneros" />
                     </div>
                 </div>
 
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo_file" />
+                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo" />
                     <FormFileInput id="capa" label="Capa do livro" accept="image/*" @change="alterarCapa" :previewUrl="livroForm.capa_preview_url" />
                 </div>
 
@@ -49,7 +49,7 @@
     import { FormCancelButton, FormCheckbox, FormErro, FormFileInput, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
     import type { Livro, LivroForm } from '../models';
     import { useAutor, useGenero, useLivro } from '../composables';
-    import { validarNome, validarPreenchimento } from '@/utils/validators';
+    import { validarPreenchimento } from '@/utils/validators';
 
     const route = useRoute();
 
@@ -65,12 +65,12 @@
         id: null,
         titulo: '',
         titulo_original: null,
+        autor_id: null,
         ano_publicacao: null,
+        genero_id: null,
         lido: false,
-        autorId: null,
-        generoId: null,
-        arquivo_file: null,
-        capa_file: null,
+        arquivo: null,
+        capa: null,
         capa_preview_url: null,
     });
 
@@ -81,16 +81,16 @@
             titulo_original: livro.titulo_original,
             ano_publicacao: livro.ano_publicacao,
             lido: livro.lido,
-            autorId: livro.autor?.id ?? null,
-            generoId: livro.genero?.id ?? null,
-            arquivo_file: null,
-            capa_file: null,
+            autor_id: livro.autor?.id ?? null,
+            genero_id: livro.genero?.id ?? null,
+            arquivo: null,
+            capa: null,
             capa_preview_url: livro.capa,
         };
     }
 
     function alterarArquivo(file: File | null): void {
-        livroForm.value.arquivo_file = file;
+        livroForm.value.arquivo = file;
     }
 
     function alterarCapa(file: File | null): void {
@@ -99,20 +99,15 @@
         }
 
         if (file) {
-            livroForm.value.capa_file = file;
+            livroForm.value.capa = file;
             livroForm.value.capa_preview_url = URL.createObjectURL(file);
         } else {
-            livroForm.value.capa_file = null;
+            livroForm.value.capa = null;
             livroForm.value.capa_preview_url = null;
         }
     }
 
     async function enviarLivro(): Promise<void> {
-        if (!validarNome(livroForm.value.titulo)) {
-            erro.value = 'O título do livro deve ser composto por letras e/ou pontos!';
-            return;
-        }
-
         try {
             if (livroId) {
                 await updateLivro(livroId, livroForm.value);
