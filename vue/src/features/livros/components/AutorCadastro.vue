@@ -10,7 +10,7 @@
                     <FormTextInput id="nome" label="Autor" placeholder="Nome do Autor" v-model="autorForm.nome" required />
 
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="pais" label="Pais" placeholder="Selecione um pais" :options="paises" v-model="autorForm.paisId" cadastro="PaisCadastro" :carregando="carregandoPais" :erro="erroPais" />
+                        <FormSelect class="flex-grow" id="pais" label="Pais" placeholder="Selecione um pais" :options="paises" v-model="autorForm.pais_id" cadastro="PaisCadastro" :carregando="carregandoPais" :erro="erroPais" />
                     </div>
                 </div>
 
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Autor' : 'Cadastrar Autor'" :desabilitado="validarPreenchimento(autorForm.nome)" />
+                    <FormSubmitButton :carregando="carregando" textoCarregando="Salvando..." :texto="modoEditar ? 'Atualizar Autor' : 'Cadastrar Autor'" :habilitado="validarPreenchimento(autorForm.nome)" />
                     <FormCancelButton />
                 </div>
 
@@ -53,7 +53,7 @@
         nome: '',
         ano_nascimento: null,
         ano_obito: null,
-        paisId: null,
+        pais_id: null,
     });
 
     function mapearLivroParaForm(autor: Autor): AutorForm {
@@ -62,7 +62,7 @@
             nome: autor.nome,
             ano_nascimento: autor.ano_nascimento,
             ano_obito: autor.ano_obito,
-            paisId: autor.pais?.id ?? null,
+            pais_id: autor.pais?.id ?? null,
         };
     }
 
