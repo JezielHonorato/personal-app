@@ -19,10 +19,10 @@ export interface LivroForm {
     titulo_original: string | null;
     ano_publicacao: number | null;
     lido: boolean;
-    autorId: number | null;
-    generoId: number | null;
-    arquivo_file: File | null;
-    capa_file: File | null;
+    autor_id: number | null;
+    genero_id: number | null;
+    arquivo: File | null;
+    capa: File | null;
     capa_preview_url: string | null;
 }
 
