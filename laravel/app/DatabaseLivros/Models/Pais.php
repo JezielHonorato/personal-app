@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pais extends Model
 {
-	protected $table = 'pais';
-	protected $fillable = [
-		'nome',
-	];
+    protected $table = 'pais';
 
-	public function autores()
-	{
-		return $this->hasMany(Autor::class);
-	}
+    protected $fillable = [
+        'nome',
+    ];
+
+    public function autores()
+    {
+        return $this->hasMany(Autor::class);
+    }
 }
