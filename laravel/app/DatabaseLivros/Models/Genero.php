@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Genero extends Model
 {
-	protected $table = 'genero';
-	protected $fillable = [
-		'nome',
-	];
+    protected $table = 'genero';
 
-	public function livrosDoGenero()
-	{
-		return $this->hasMany(Livro::class, 'genero_id');
-	}
+    protected $fillable = [
+        'nome',
+    ];
+
+    public function livrosDoGenero()
+    {
+        return $this->hasMany(Livro::class, 'genero_id');
+    }
 }
