@@ -1,61 +1,54 @@
 <?php
 
-namespace App\DatabaseLivros\Http\Controllers;
-
+use App\DatabaseLivros\Models\Genero;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class GeneroController
 {
-	public function index()
-	{
-		$generos = DB::table('genero')->get();
-		return ApiResponse::success($generos, 200);
-	}
+    public function index()
+    {
+        $generos = Genero::all();
 
-	public function show(int $id)
-	{
-		$genero = DB::table('genero')
-			->where('id', $id)
-			->first();
+        return ApiResponse::success($generos, 200);
+    }
 
-		return ApiResponse::success($genero, 200);
-	}
+    public function show(int $id)
+    {
+        $genero = Genero::findOrFail($id);
 
+        return ApiResponse::success($genero, 200);
+    }
 
-	public function store(Request $request)
-	{
-		$validated = $request->validate([
-			'nome' => ['required', 'string', 'max:50', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z .]+$/',  'unique:genero,nome'],
-		]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nome' => ['required', 'string', 'max:50', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z .]+$/', 'unique:genero,nome'],
+        ]);
 
-		DB::table('genero')->insert($validated);
+        Genero::create($validated);
 
-		return ApiResponse::success(null, 201);
-	}
+        return ApiResponse::success(null, 201);
+    }
 
+    public function update(Request $request, int $id)
+    {
+        $validated = $request->validate([
+            'nome' => ['required', 'string', 'max:50', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z .]+$/', Rule::unique('genero')->ignore($id)],
+        ]);
 
-	public function update(Request $request, int $id)
-	{
-		$validated = $request->validate([
-			'nome' => ['required', 'string', 'max:50', 'regex:/^(?=.*[a-zA-Z])[a-zA-Z .]+$/', Rule::unique('genero')->ignore($id)],
-		]);
+        Genero::findOrFail($id)
+            ->update($validated);
 
-		DB::table('genero')
-			->where('id', $id)
-			->update($validated);
+        return ApiResponse::success(null, 201);
+    }
 
-		return ApiResponse::success(null, 201);
-	}
+    public function destroy(int $id)
+    {
+        Genero::findOrFail($id)
+            ->delete();
 
-	public function destroy(int $id)
-	{
-		DB::table('genero')
-			->where('id', $id)
-			->delete();
-
-		return ApiResponse::success(null, 204);
-	}
+        return ApiResponse::success(null, 204);
+    }
 }
