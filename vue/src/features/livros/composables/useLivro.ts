@@ -59,8 +59,6 @@ export function useLivro() {
     async function updateLivro(id: number, data: LivroForm): Promise<void> {
         carregando.value = true;
         erro.value = null;
-				console.log(data)
-
         try {
             await livroService.update(id, data);
         } catch (err: any) {
