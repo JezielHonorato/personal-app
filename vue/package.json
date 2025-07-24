@@ -13,10 +13,13 @@
     "dependencies": {
         "@tailwindcss/vite": "^4.1.10",
         "axios": "^1.10.0",
+        "katex": "^0.16.22",
         "lucide-vue-next": "^0.522.0",
+        "pdf-lib": "^1.17.1",
         "pinia": "^3.0.3",
-        "vue": "^3.5.13",
-        "vue-router": "^4.5.1"
+        "vue": "^3.5.18",
+        "vue-router": "^4.5.1",
+        "vuedraggable": "^2.24.3"
     },
     "devDependencies": {
         "@types/node": "^24.0.3",
