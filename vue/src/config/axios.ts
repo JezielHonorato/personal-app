@@ -30,6 +30,12 @@ function procurarMensagemErro(data: any): string[] {
 
     if (data?.errors?.details && Array.isArray(data.errors.details)) {
         mensagens.push(...data.errors.details.filter((item: string) => typeof item === 'string'));
+    } else if (data?.errors && typeof data.errors === 'object') {
+        Object.values(data.errors).forEach((mensagemArray) => {
+            if (Array.isArray(mensagemArray)) {
+                mensagens.push(...mensagemArray);
+            }
+        });
     } else if (typeof data?.message === 'string') {
         mensagens.push(data.message);
     }
