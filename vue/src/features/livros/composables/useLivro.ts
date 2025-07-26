@@ -43,7 +43,7 @@ export function useLivro() {
         }
     }
 
-    async function createLivro(data: LivroForm): Promise<void> {
+    async function createLivro(data: FormData): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
@@ -56,7 +56,7 @@ export function useLivro() {
         }
     }
 
-    async function updateLivro(id: number, data: LivroForm): Promise<void> {
+    async function updateLivro(id: number, data: FormData): Promise<void> {
         carregando.value = true;
         erro.value = null;
         try {
