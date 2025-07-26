@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo" />
+                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo?.name" />
                     <FormFileInput id="capa" label="Capa do livro" accept="image/*" @change="alterarCapa" :previewUrl="livroForm.capa_preview_url" />
                 </div>
 
@@ -47,7 +47,7 @@
     import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
     import { FormCancelButton, FormCheckbox, FormErro, FormFileInput, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
-    import type { Livro, LivroForm } from '../models';
+    import type { Livro, LivroForm } from '../models'; // Certifique-se de que LivroForm está definido em models.ts
     import { useAutor, useGenero, useLivro } from '../composables';
     import { validarPreenchimento } from '@/utils/validators';
 
@@ -83,17 +83,21 @@
             lido: livro.lido,
             autor_id: livro.autor?.id ?? null,
             genero_id: livro.genero?.id ?? null,
-            arquivo: null,
-            capa: null,
-            capa_preview_url: livro.capa,
+            arquivo: null, // O arquivo em si não é retornado pela API
+            capa: null, // A capa como File não é retornada
+            capa_preview_url: livro.capa, // A URL da capa é retornada
         };
     }
+
+    // Remova a lógica de `event.target as HTMLInputElement;` e `input.files`
+    // e espere que o FormFileInput já passe o File | null diretamente.
 
     function alterarArquivo(file: File | null): void {
         livroForm.value.arquivo = file;
     }
 
     function alterarCapa(file: File | null): void {
+        // Revoga a URL do objeto anterior para evitar vazamentos de memória
         if (livroForm.value.capa_preview_url?.startsWith('blob:')) {
             URL.revokeObjectURL(livroForm.value.capa_preview_url);
         }
@@ -109,15 +113,40 @@
 
     async function enviarLivro(): Promise<void> {
         try {
-            if (livroId) {
-                await updateLivro(livroId, livroForm.value);
-            } else {
-                await createLivro(livroForm.value);
+            const formData = new FormData();
+            formData.append('titulo', livroForm.value.titulo);
+            formData.append('titulo_original', livroForm.value.titulo_original ?? '');
+            formData.append('autor_id', livroForm.value.autor_id !== null ? livroForm.value.autor_id.toString() : '');
+            formData.append('genero_id', livroForm.value.genero_id !== null ? livroForm.value.genero_id.toString() : '');
+            formData.append('ano_publicacao', livroForm.value.ano_publicacao !== null ? livroForm.value.ano_publicacao.toString() : '');
+            formData.append('lido', livroForm.value.lido ? '1' : '0');
+
+            if (livroForm.value.arquivo) {
+                formData.append('arquivo', livroForm.value.arquivo);
             }
+
+            if (livroForm.value.capa) {
+                formData.append('capa', livroForm.value.capa);
+            }
+
+            if (modoEditar.value) {
+                // Use modoEditar.value para consistência
+                formData.append('_method', 'PUT'); // Necessário para Laravel com FormData no update
+                await updateLivro(livroId!, formData); // Use ! para afirmar que livroId não é null
+            } else {
+                await createLivro(formData);
+            }
+
             await getLivros();
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o livro:', error);
+            // Aqui você pode atribuir o erro à sua variável `erro` para exibição no FormErro
+            // if (error.response && error.response.data && error.response.data.message) {
+            //     erro.value = error.response.data.message;
+            // } else {
+            //     erro.value = 'Ocorreu um erro ao salvar o livro. Por favor, tente novamente.';
+            // }
         }
     }
 
@@ -132,6 +161,8 @@
                 }
             } catch (error) {
                 console.error('Erro ao buscar livro para edição:', error);
+                // Similarmente, pode atribuir erro aqui
+                // erro.value = 'Não foi possível carregar os dados do livro para edição.';
             }
         }
     });
