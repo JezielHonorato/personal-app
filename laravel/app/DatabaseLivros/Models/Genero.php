@@ -16,4 +16,6 @@ class Genero extends Model
     {
         return $this->hasMany(Livro::class, 'genero_id');
     }
+
+    public $timestamps = false;
 }
