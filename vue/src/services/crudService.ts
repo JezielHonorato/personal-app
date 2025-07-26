@@ -2,16 +2,16 @@ import { api } from '@/config/axios';
 
 export type QueryParams = Record<string, any>;
 
-export interface InterfaceCrudService<InterfaceModel, InterfaceForm> {
+export interface InterfaceCrudService<InterfaceModel> {
     //getAll(params?: QueryParams): Promise<InterfaceModel[]>;
     getAll(): Promise<InterfaceModel[]>;
     getById(id: number): Promise<InterfaceModel>;
-    create(data: InterfaceForm): Promise<void>;
-    update(id: number, data: InterfaceForm): Promise<void>;
+    create(data: FormData): Promise<void>;
+    update(id: number, data: FormData): Promise<void>;
     delete(id: number): Promise<void>;
 }
 
-export abstract class CrudService<InterfaceModel, InterfaceForm> implements InterfaceCrudService<InterfaceModel, InterfaceForm> {
+export abstract class CrudService<InterfaceModel> implements InterfaceCrudService<InterfaceModel> {
     private endpoint: string;
 
     constructor(endpoint: string) {
@@ -35,12 +35,12 @@ export abstract class CrudService<InterfaceModel, InterfaceForm> implements Inte
         return response.data;
     }
 
-    async create(data: InterfaceForm): Promise<void> {
+    async create(data: FormData): Promise<void> {
         await api.post<InterfaceModel>(`/${this.endpoint}/`, data);
     }
 
-    async update(id: number, data: InterfaceForm): Promise<void> {
-        await api.put<InterfaceModel>(`/${this.endpoint}/${id}/`, data);
+    async update(id: number, data: FormData): Promise<void> {
+        await api.post<InterfaceModel>(`/${this.endpoint}/${id}/`, data);
     }
 
     async delete(id: number): Promise<void> {
