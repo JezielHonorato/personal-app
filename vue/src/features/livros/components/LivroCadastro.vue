@@ -47,7 +47,7 @@
     import { onMounted, ref, type Ref } from 'vue';
     import { useRoute } from 'vue-router';
     import { FormCancelButton, FormCheckbox, FormErro, FormFileInput, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
-    import type { Livro, LivroForm } from '../models'; // Certifique-se de que LivroForm está definido em models.ts
+    import type { Livro, LivroForm } from '../models';
     import { useAutor, useGenero, useLivro } from '../composables';
     import { validarPreenchimento } from '@/utils/validators';
 
@@ -83,21 +83,17 @@
             lido: livro.lido,
             autor_id: livro.autor?.id ?? null,
             genero_id: livro.genero?.id ?? null,
-            arquivo: null, // O arquivo em si não é retornado pela API
-            capa: null, // A capa como File não é retornada
-            capa_preview_url: livro.capa, // A URL da capa é retornada
+            arquivo: null,
+            capa: null,
+            capa_preview_url: livro.capa,
         };
     }
-
-    // Remova a lógica de `event.target as HTMLInputElement;` e `input.files`
-    // e espere que o FormFileInput já passe o File | null diretamente.
 
     function alterarArquivo(file: File | null): void {
         livroForm.value.arquivo = file;
     }
 
     function alterarCapa(file: File | null): void {
-        // Revoga a URL do objeto anterior para evitar vazamentos de memória
         if (livroForm.value.capa_preview_url?.startsWith('blob:')) {
             URL.revokeObjectURL(livroForm.value.capa_preview_url);
         }
@@ -122,6 +118,7 @@
             formData.append('lido', livroForm.value.lido ? '1' : '0');
 
             if (livroForm.value.arquivo) {
+                console.log(livroForm.value.arquivo);
                 formData.append('arquivo', livroForm.value.arquivo);
             }
 
@@ -130,9 +127,8 @@
             }
 
             if (modoEditar.value) {
-                // Use modoEditar.value para consistência
-                formData.append('_method', 'PUT'); // Necessário para Laravel com FormData no update
-                await updateLivro(livroId!, formData); // Use ! para afirmar que livroId não é null
+                formData.append('_method', 'PUT');
+                await updateLivro(livroId!, formData);
             } else {
                 await createLivro(formData);
             }
@@ -141,12 +137,6 @@
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o livro:', error);
-            // Aqui você pode atribuir o erro à sua variável `erro` para exibição no FormErro
-            // if (error.response && error.response.data && error.response.data.message) {
-            //     erro.value = error.response.data.message;
-            // } else {
-            //     erro.value = 'Ocorreu um erro ao salvar o livro. Por favor, tente novamente.';
-            // }
         }
     }
 
@@ -161,8 +151,6 @@
                 }
             } catch (error) {
                 console.error('Erro ao buscar livro para edição:', error);
-                // Similarmente, pode atribuir erro aqui
-                // erro.value = 'Não foi possível carregar os dados do livro para edição.';
             }
         }
     });
