@@ -1,5 +1,7 @@
 <?php
 
+namespace App\DatabaseLivros\Http\Controllers;
+
 use App\DatabaseLivros\Models\Genero;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\Request;
