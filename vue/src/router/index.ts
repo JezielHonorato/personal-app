@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { LivrosRoutes } from '@/features/livros/router';
 import Home from '@/components/Home.vue';
 import TextEditor from '@/components/TextEditor.vue';
+import JsonSorter from '@/components/JsonSorter.vue';
 
 const routes = [
     {
@@ -13,6 +14,11 @@ const routes = [
         path: '/texto',
         name: 'TextEditor',
         component: TextEditor,
+    },
+    {
+        path: '/json',
+        name: 'JsonSorter',
+        component: JsonSorter,
     },
     ...LivrosRoutes,
     {
