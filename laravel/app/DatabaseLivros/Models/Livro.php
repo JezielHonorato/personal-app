@@ -28,4 +28,6 @@ class Livro extends Model
     {
         return $this->belongsTo(Genero::class);
     }
+
+    public $timestamps = false;
 }
