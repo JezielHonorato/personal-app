@@ -2,7 +2,7 @@ import type { Autor } from '../models';
 import type { Genero } from '../models';
 
 export interface Livro {
-    id: number | null;
+    id: number;
     titulo: string;
     titulo_original: string | null;
     ano_publicacao: number | null;
