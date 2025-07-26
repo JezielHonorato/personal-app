@@ -24,4 +24,6 @@ class Autor extends Model
     {
         return $this->hasMany(Livro::class, 'autor_id');
     }
+
+    public $timestamps = false;
 }
