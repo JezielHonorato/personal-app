@@ -16,4 +16,6 @@ class Pais extends Model
     {
         return $this->hasMany(Autor::class);
     }
+
+    public $timestamps = false;
 }
