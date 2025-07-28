@@ -10,7 +10,7 @@
                     <FormTextInput id="nome" label="Autor" placeholder="Nome do Autor" v-model="autorForm.nome" required />
 
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="pais" label="Pais" placeholder="Selecione um pais" :options="paises" v-model="autorForm.pais_id" cadastro="PaisCadastro" :carregando="carregandoPais" :erro="erroPais" />
+                        <FormSelect class="flex-grow" id="pais" label="Pais" placeholder="Selecione um pais" :options="paises" v-model="autorForm.pais_id" cadastro="PaisCadastro" :carregando="carregandoPais" :erro="erroPais[0]" />
                     </div>
                 </div>
 
@@ -38,7 +38,7 @@
     import { FormCancelButton, FormErro, FormNumberInput, FormSelect, FormSubmitButton, FormTextInput } from '@/components/form';
     import type { Autor, AutorForm } from '../models/autorModel';
     import { useAutor, usePais } from '../composables';
-    import { validarPreenchimento } from '@/utils/validators';
+    import { validarPreenchimento, validarNome } from '@/utils/validators';
 
     const route = useRoute();
 
@@ -46,7 +46,7 @@
     const modoEditar: Ref<boolean> = ref(!!autorId);
 
     const { paises, carregando: carregandoPais, erro: erroPais, getPaises } = usePais();
-    const { autor, carregando, erro, getAutor, getAutores, createAutor, updateAutor } = useAutor();
+    const { autor, carregando, erro, getAutor, createAutor, updateAutor } = useAutor();
 
     const autorForm: Ref<AutorForm> = ref<AutorForm>({
         id: null,
@@ -67,13 +67,31 @@
     }
 
     async function enviarAutor(): Promise<void> {
-        try {
-            if (autorId) {
-                await updateAutor(autorId, autorForm.value);
-            } else {
-                await createAutor(autorForm.value);
+        if (!validarNome(autorForm.value.nome)) {
+            erro.value.push('O nome do autor deve ser composto por letras.');
+        }
+
+        if (autorForm.value.ano_obito && autorForm.value.ano_nascimento) {
+            if (autorForm.value.ano_obito < autorForm.value.ano_nascimento) {
+                erro.value.push('O data de nascimento deve ser menor que a data do óbito.');
             }
-            await getAutores();
+        }
+
+        if (erro.value.length > 0) return;
+
+        try {
+            const formData = new FormData();
+            formData.append('nome', autorForm.value.nome);
+            formData.append('ano_nascimento', autorForm.value.ano_nascimento !== null ? autorForm.value.ano_nascimento.toString() : '');
+            formData.append('ano_obito', autorForm.value.ano_obito !== null ? autorForm.value.ano_obito.toString() : '');
+            formData.append('pais_id', autorForm.value.pais_id !== null ? autorForm.value.pais_id.toString() : '');
+
+            if (autorId) {
+                await updateAutor(autorId, formData);
+            } else {
+                await createAutor(formData);
+            }
+
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o autor:', error);
