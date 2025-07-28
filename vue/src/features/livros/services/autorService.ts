@@ -1,7 +1,7 @@
 import { CrudService } from '@/services/crudService';
-import type { Autor, AutorForm } from '../models/autorModel';
+import type { Autor } from '../models/autorModel';
 
-class AutorService extends CrudService<Autor, AutorForm> {
+class AutorService extends CrudService<Autor> {
     constructor() {
         super('autores');
     }
