@@ -13,10 +13,10 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="autor" label="Autor" placeholder="Selecione um autor" :options="autores" v-model="livroForm.autor_id" :carregando="carregandoAutores" :erro="erroAutores" cadastro="AutorCadastro" />
+                        <FormSelect class="flex-grow" id="autor" label="Autor" placeholder="Selecione um autor" :options="autores" v-model="livroForm.autor_id" :carregando="carregandoAutores" :erro="erroAutores[0]" cadastro="AutorCadastro" />
                     </div>
                     <div class="flex items-end gap-2">
-                        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Selecione um gênero" :options="generos" v-model="livroForm.genero_id" cadastro="GeneroCadastro" :carregando="carregandoGeneros" :erro="erroGeneros" />
+                        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Selecione um gênero" :options="generos" v-model="livroForm.genero_id" cadastro="GeneroCadastro" :carregando="carregandoGeneros" :erro="erroGeneros[0]" />
                     </div>
                 </div>
 
@@ -26,8 +26,8 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" @change="alterarArquivo" :fileName="livroForm.arquivo?.name" />
-                    <FormFileInput id="capa" label="Capa do livro" accept="image/*" @change="alterarCapa" :previewUrl="livroForm.capa_preview_url" />
+                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" :fileName="livroForm.arquivo?.name" />
+                    <FormFileInput id="capa" label="Capa do livro" accept="image/*" />
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
@@ -56,8 +56,7 @@
     const livroId: number | null = route.params.id ? Number(route.params.id) : null;
     const modoEditar: Ref<boolean> = ref(!!livroId);
 
-    const { livro, carregando, erro, getLivro, getLivros, createLivro, updateLivro } = useLivro();
-
+    const { livro, carregando, erro, getLivro, createLivro, updateLivro } = useLivro();
     const { generos, carregando: carregandoGeneros, erro: erroGeneros, getGeneros } = useGenero();
     const { autores, carregando: carregandoAutores, erro: erroAutores, getAutores } = useAutor();
 
@@ -71,7 +70,6 @@
         lido: false,
         arquivo: null,
         capa: null,
-        capa_preview_url: null,
     });
 
     function mapearLivroParaForm(livro: Livro): LivroForm {
@@ -85,26 +83,7 @@
             genero_id: livro.genero?.id ?? null,
             arquivo: null,
             capa: null,
-            capa_preview_url: livro.capa,
         };
-    }
-
-    function alterarArquivo(file: File | null): void {
-        livroForm.value.arquivo = file;
-    }
-
-    function alterarCapa(file: File | null): void {
-        if (livroForm.value.capa_preview_url?.startsWith('blob:')) {
-            URL.revokeObjectURL(livroForm.value.capa_preview_url);
-        }
-
-        if (file) {
-            livroForm.value.capa = file;
-            livroForm.value.capa_preview_url = URL.createObjectURL(file);
-        } else {
-            livroForm.value.capa = null;
-            livroForm.value.capa_preview_url = null;
-        }
     }
 
     async function enviarLivro(): Promise<void> {
@@ -117,23 +96,15 @@
             formData.append('ano_publicacao', livroForm.value.ano_publicacao !== null ? livroForm.value.ano_publicacao.toString() : '');
             formData.append('lido', livroForm.value.lido ? '1' : '0');
 
-            if (livroForm.value.arquivo) {
-                console.log(livroForm.value.arquivo);
-                formData.append('arquivo', livroForm.value.arquivo);
-            }
+            if (livroForm.value.arquivo) formData.append('arquivo', livroForm.value.arquivo);
+            if (livroForm.value.capa) formData.append('capa', livroForm.value.capa);
 
-            if (livroForm.value.capa) {
-                formData.append('capa', livroForm.value.capa);
-            }
-
-            if (modoEditar.value) {
-                formData.append('_method', 'PUT');
-                await updateLivro(livroId!, formData);
+            if (livroId) {
+                await updateLivro(livroId, formData);
             } else {
                 await createLivro(formData);
             }
 
-            await getLivros();
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o livro:', error);
