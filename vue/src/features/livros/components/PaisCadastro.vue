@@ -48,18 +48,22 @@
         };
     }
 
-    async function enviarPais() {
+    async function enviarPais(): Promise<void> {
         if (!validarNome(paisForm.value.nome)) {
-            erro.value = 'O título do livro deve ser composto por letras e/ou pontos!';
+            erro.value.push('O nome do país deve ser composto por letras.');
             return;
         }
 
         try {
+            const formData = new FormData();
+            formData.append('nome', paisForm.value.nome);
+
             if (paisId) {
-                await updatePais(paisId, paisForm.value);
+                await updatePais(paisId, formData);
             } else {
-                await createPais(paisForm.value);
+                await createPais(formData);
             }
+
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o gênero:', error);
