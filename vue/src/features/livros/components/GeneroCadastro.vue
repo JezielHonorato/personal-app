@@ -27,14 +27,14 @@
     import { FormCancelButton, FormErro, FormSubmitButton, FormTextInput } from '@/components/form';
     import type { Genero, GeneroForm } from '../models';
     import { useGenero } from '../composables';
-    import { validarPreenchimento } from '@/utils/validators';
+    import { validarPreenchimento, validarNome } from '@/utils/validators';
 
     const route = useRoute();
 
     const generoId: number | null = route.params.id ? Number(route.params.id) : null;
     const modoEditar: Ref<boolean> = ref(!!generoId);
 
-    const { genero, carregando, erro, getGenero, getGeneros, createGenero, updateGenero } = useGenero();
+    const { genero, carregando, erro, getGenero, createGenero, updateGenero } = useGenero();
 
     const generoForm = ref<GeneroForm>({
         id: null,
@@ -49,13 +49,21 @@
     }
 
     async function enviarGenero(): Promise<void> {
+        if (!validarNome(generoForm.value.nome)) {
+            erro.value.push('O nome do gênero deve ser composto por letras.');
+            return;
+        }
+
         try {
+            const formData = new FormData();
+            formData.append('nome', generoForm.value.nome);
+
             if (generoId) {
-                await updateGenero(generoId, generoForm.value);
+                await updateGenero(generoId, formData);
             } else {
-                await createGenero(generoForm.value);
+                await createGenero(formData);
             }
-            await getGeneros();
+
             history.back();
         } catch (error) {
             console.error('Falha ao salvar o gênero:', error);
