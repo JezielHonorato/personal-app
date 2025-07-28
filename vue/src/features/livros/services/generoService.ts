@@ -1,7 +1,7 @@
 import { CrudService } from '@/services/crudService';
-import type { Genero, GeneroForm } from '../models/generoModel';
+import type { Genero } from '../models/generoModel';
 
-class GeneroService extends CrudService<Genero, GeneroForm> {
+class GeneroService extends CrudService<Genero> {
     constructor() {
         super('generos');
     }
