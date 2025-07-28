@@ -1,7 +1,7 @@
 import { CrudService } from '@/services/crudService';
-import type { Pais, PaisForm } from '../models/paisModel';
+import type { Pais } from '../models/paisModel';
 
-class PaisService extends CrudService<Pais, PaisForm> {
+class PaisService extends CrudService<Pais> {
     constructor() {
         super('paises');
     }
