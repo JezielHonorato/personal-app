@@ -1,16 +1,16 @@
 import { ref, type Ref } from 'vue';
 import { generoService } from '../services';
-import type { Genero, GeneroForm } from '../models';
+import type { Genero } from '../models';
 
 export function useGenero() {
     const genero: Ref<Genero | null> = ref<Genero | null>(null);
     const generos: Ref<Genero[]> = ref<Genero[]>([]);
     const carregando: Ref<boolean> = ref(false);
-    const erro: Ref<string | null> = ref<string | null>(null);
+    const erro: Ref<string[]> = ref<string[]>([]);
 
     async function getGeneros(): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             generos.value = await generoService.getAll();
         } catch (err: any) {
@@ -23,7 +23,7 @@ export function useGenero() {
 
     async function getGenero(id: number): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             genero.value = await generoService.getById(id);
         } catch (err: any) {
@@ -34,9 +34,9 @@ export function useGenero() {
         }
     }
 
-    async function createGenero(data: GeneroForm): Promise<void> {
+    async function createGenero(data: FormData): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             await generoService.create(data);
         } catch (err: any) {
@@ -47,9 +47,9 @@ export function useGenero() {
         }
     }
 
-    async function updateGenero(id: number, data: GeneroForm): Promise<void> {
+    async function updateGenero(id: number, data: FormData): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             await generoService.update(id, data);
         } catch (err: any) {
@@ -62,7 +62,7 @@ export function useGenero() {
 
     async function deleteGenero(id: number): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             await generoService.delete(id);
         } catch (err: any) {
