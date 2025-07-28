@@ -1,13 +1,13 @@
 import { ref, computed, type Ref } from 'vue';
 import { livroService } from '../services';
-import type { Livro, LivroForm, LivroFiltro, LivroConteudo } from '../models';
+import type { Livro, LivroFiltro, LivroConteudo } from '../models';
 
 export function useLivro() {
     const livro: Ref<Livro | null> = ref<Livro | null>(null);
     const livros: Ref<Livro[]> = ref<Livro[]>([]);
     const conteudo: Ref<LivroConteudo | null> = ref<LivroConteudo | null>(null);
     const carregando: Ref<boolean> = ref(false);
-    const erro: Ref<string | null> = ref<string | null>(null);
+    const erro: Ref<string[]> = ref<string[]>([]);
 
     const filtros: Ref<LivroFiltro> = ref<LivroFiltro>({
         tituloAutor: '',
@@ -19,7 +19,7 @@ export function useLivro() {
 
     async function getLivros(): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             livros.value = await livroService.getAll();
         } catch (err: any) {
@@ -32,7 +32,7 @@ export function useLivro() {
 
     async function getLivro(id: number): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             livro.value = await livroService.getById(id);
         } catch (err: any) {
@@ -45,7 +45,7 @@ export function useLivro() {
 
     async function createLivro(data: FormData): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             await livroService.create(data);
         } catch (err: any) {
@@ -58,8 +58,9 @@ export function useLivro() {
 
     async function updateLivro(id: number, data: FormData): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
+            data.append('_method', 'PUT');
             await livroService.update(id, data);
         } catch (err: any) {
             erro.value = err.message || 'Ocorreu um erro ao atualizar o livro.';
@@ -71,7 +72,7 @@ export function useLivro() {
 
     async function deleteLivro(id: number): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             await livroService.delete(id);
         } catch (err: any) {
@@ -84,7 +85,7 @@ export function useLivro() {
 
     async function getConteudoLivro(id: number): Promise<void> {
         carregando.value = true;
-        erro.value = null;
+        erro.value = [];
         try {
             conteudo.value = await livroService.getContent(id);
         } catch (err: any) {
