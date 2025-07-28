@@ -1,6 +1,6 @@
 import { api } from '@/config/axios';
 import { CrudService } from '@/services/crudService';
-import type { Livro, LivroForm, LivroConteudo } from '../models/livroModel';
+import type { Livro, LivroConteudo } from '../models/livroModel';
 
 class LivroService extends CrudService<Livro> {
     constructor() {
