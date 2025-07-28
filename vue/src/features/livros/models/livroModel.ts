@@ -23,7 +23,6 @@ export interface LivroForm {
     genero_id: number | null;
     arquivo: File | null;
     capa: File | null;
-    capa_preview_url: string | null;
 }
 
 export interface LivroFiltro {
