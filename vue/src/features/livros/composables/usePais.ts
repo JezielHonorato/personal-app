@@ -1,6 +1,7 @@
 import { ref, type Ref } from 'vue';
 import { paisService } from '../services';
 import type { Pais } from '../models';
+import { tratarErro } from '@/utils/error';
 
 export function usePais() {
     const pais: Ref<Pais | null> = ref<Pais | null>(null);
@@ -13,9 +14,9 @@ export function usePais() {
         erro.value = [];
         try {
             paises.value = await paisService.getAll();
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar os paises.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar o país.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -26,9 +27,9 @@ export function usePais() {
         erro.value = [];
         try {
             pais.value = await paisService.getById(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar o pais.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar os países.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -39,8 +40,8 @@ export function usePais() {
         erro.value = [];
         try {
             await paisService.create(data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao criar o pais.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao criar o país.');
             throw err;
         } finally {
             carregando.value = false;
@@ -52,8 +53,8 @@ export function usePais() {
         erro.value = [];
         try {
             await paisService.update(id, data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao atualizar o pais.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao atualizar o país.');
             throw err;
         } finally {
             carregando.value = false;
@@ -65,8 +66,8 @@ export function usePais() {
         erro.value = [];
         try {
             await paisService.delete(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao deletar o pais.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao deletar o país.');
             throw err;
         } finally {
             carregando.value = false;
