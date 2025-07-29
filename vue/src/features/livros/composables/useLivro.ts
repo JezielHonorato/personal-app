@@ -1,6 +1,7 @@
 import { ref, computed, type Ref } from 'vue';
 import { livroService } from '../services';
 import type { Livro, LivroFiltro, LivroConteudo } from '../models';
+import { tratarErro } from '@/utils/error';
 
 export function useLivro() {
     const livro: Ref<Livro | null> = ref<Livro | null>(null);
@@ -22,9 +23,9 @@ export function useLivro() {
         erro.value = [];
         try {
             livros.value = await livroService.getAll();
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar os livros.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar os livros.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -35,9 +36,9 @@ export function useLivro() {
         erro.value = [];
         try {
             livro.value = await livroService.getById(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar o livro.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar o livro.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -48,8 +49,8 @@ export function useLivro() {
         erro.value = [];
         try {
             await livroService.create(data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao criar o livro.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao criar o livro.');
             throw err;
         } finally {
             carregando.value = false;
@@ -62,8 +63,8 @@ export function useLivro() {
         try {
             data.append('_method', 'PUT');
             await livroService.update(id, data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao atualizar o livro.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao atualizar o livro.');
             throw err;
         } finally {
             carregando.value = false;
@@ -75,8 +76,8 @@ export function useLivro() {
         erro.value = [];
         try {
             await livroService.delete(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao deletar o livro.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao deletar o livro.');
             throw err;
         } finally {
             carregando.value = false;
@@ -88,8 +89,8 @@ export function useLivro() {
         erro.value = [];
         try {
             conteudo.value = await livroService.getContent(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao deletar o livro.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar o conteúdo do livro.');
             throw err;
         } finally {
             carregando.value = false;
@@ -103,13 +104,9 @@ export function useLivro() {
     const livrosFiltrados = computed(() => {
         return livros.value.filter((livro) => {
             const filtro = filtros.value;
-
             const filtroTituloAutor = !filtro.tituloAutor || livro.titulo.toLowerCase().includes(filtro.tituloAutor.toLowerCase()) || (livro.autor && livro.autor.nome.toLowerCase().includes(filtro.tituloAutor.toLowerCase()));
-
             const filtroGenero = !filtro.generoId || livro.genero?.id === filtro.generoId;
-
             const filtroPais = !filtro.paisId || livro.autor?.pais?.id === filtro.paisId;
-
             const filtroAno = (!filtro.anoInicial || (livro.ano_publicacao && livro.ano_publicacao >= filtro.anoInicial)) && (!filtro.anoFinal || (livro.ano_publicacao && livro.ano_publicacao <= filtro.anoFinal));
 
             return filtroTituloAutor && filtroGenero && filtroPais && filtroAno;
