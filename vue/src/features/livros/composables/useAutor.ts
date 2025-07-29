@@ -1,6 +1,7 @@
 import { ref, type Ref } from 'vue';
 import { autorService } from '../services';
 import type { Autor } from '../models';
+import { tratarErro } from '@/utils/error';
 
 export function useAutor() {
     const autor: Ref<Autor | null> = ref<Autor | null>(null);
@@ -13,9 +14,9 @@ export function useAutor() {
         erro.value = [];
         try {
             autores.value = await autorService.getAll();
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar os Autores.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar o autor.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -26,9 +27,9 @@ export function useAutor() {
         erro.value = [];
         try {
             autor.value = await autorService.getById(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar o Autor.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar os autores.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -39,8 +40,8 @@ export function useAutor() {
         erro.value = [];
         try {
             await autorService.create(data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao criar o Autor.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao criar o autor.');
             throw err;
         } finally {
             carregando.value = false;
@@ -52,8 +53,8 @@ export function useAutor() {
         erro.value = [];
         try {
             await autorService.update(id, data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao atualizar o Autor.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao atualizar o autor.');
             throw err;
         } finally {
             carregando.value = false;
@@ -65,8 +66,8 @@ export function useAutor() {
         erro.value = [];
         try {
             await autorService.delete(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao deletar o Autor.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao deletar o autor.');
             throw err;
         } finally {
             carregando.value = false;
