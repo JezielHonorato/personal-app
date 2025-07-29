@@ -1,5 +1,5 @@
 import axios, { type AxiosError, type AxiosInstance, type AxiosResponse } from 'axios';
-import { getMensagemErro, type ErroInfo } from '@/constants/errorMessages';
+import { getMensagemErro } from '@/utils/error';
 
 export const api: AxiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000/api/',
@@ -10,17 +10,16 @@ api.interceptors.response.use(
     (error: AxiosError) => {
         if (axios.isAxiosError(error) && error.response) {
             const data: any = error.response.data;
-            const mensagens: string[] = procurarMensagemErro(data);
+            const mensagensErro: string[] = procurarMensagemErro(data);
 
-            if (mensagens.length > 0) {
-                return Promise.reject(new Error(mensagens.join('\n')));
+            if (mensagensErro.length > 0) {
+                return Promise.reject(mensagensErro);
             }
 
-            const genericError: ErroInfo = getMensagemErro(error.response.status);
-            return Promise.reject(new Error(genericError.message));
+            return Promise.reject([getMensagemErro(error.response.status)]);
         }
 
-        return Promise.reject(new Error('Erro de conexão com o servidor.'));
+        return Promise.reject(['Erro de conexão com o servidor.']);
     }
 );
 
