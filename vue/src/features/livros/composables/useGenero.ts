@@ -1,6 +1,7 @@
 import { ref, type Ref } from 'vue';
 import { generoService } from '../services';
 import type { Genero } from '../models';
+import { tratarErro } from '@/utils/error';
 
 export function useGenero() {
     const genero: Ref<Genero | null> = ref<Genero | null>(null);
@@ -13,9 +14,9 @@ export function useGenero() {
         erro.value = [];
         try {
             generos.value = await generoService.getAll();
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar os Generos.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar os gêneros.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -26,9 +27,9 @@ export function useGenero() {
         erro.value = [];
         try {
             genero.value = await generoService.getById(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao buscar o Genero.';
-            console.error(err);
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao buscar o gênero.');
+            throw err;
         } finally {
             carregando.value = false;
         }
@@ -39,8 +40,8 @@ export function useGenero() {
         erro.value = [];
         try {
             await generoService.create(data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao criar o Genero.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao criar gênero.');
             throw err;
         } finally {
             carregando.value = false;
@@ -52,8 +53,8 @@ export function useGenero() {
         erro.value = [];
         try {
             await generoService.update(id, data);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao atualizar o Genero.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao atualizar o gênero.');
             throw err;
         } finally {
             carregando.value = false;
@@ -65,8 +66,8 @@ export function useGenero() {
         erro.value = [];
         try {
             await generoService.delete(id);
-        } catch (err: any) {
-            erro.value = err.message || 'Ocorreu um erro ao deletar o Genero.';
+        } catch (err: unknown) {
+            erro.value = tratarErro(err, 'Ocorreu um erro ao deletar o gênero.');
             throw err;
         } finally {
             carregando.value = false;
