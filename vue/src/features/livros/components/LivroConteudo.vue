@@ -46,7 +46,7 @@
 
             <main class="flex-grow overflow-auto">
                 <div v-if="carregando" class="text-center p-6">Carregando conteúdo...</div>
-                <div v-else-if="erro" class="text-center text-red-500 p-6">
+                <div v-else-if="erro[0]" class="text-center text-red-500 p-6">
                     <p>Ocorreu um erro:</p>
                     <p>{{ erro }}</p>
                 </div>
