@@ -2,9 +2,9 @@
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <FormSearchInput id="titulo" label="Título ou Autor" placeholder="Pesquisar..." v-model="queryNome" />
 
-        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Todos os Gêneros" :options="generos" v-model="selectGenero" :carregando="carregandoGeneros" :erro="erroGeneros" />
+        <FormSelect class="flex-grow" id="genero" label="Gênero" placeholder="Todos os Gêneros" :options="generos" v-model="selectGenero" :carregando="carregandoGeneros" :erro="erroGeneros[0]" />
 
-        <FormSelect class="flex-grow" id="pais" label="País" placeholder="Todos os Países" :options="paises" v-model="selectPais" :carregando="carregandoPaises" :erro="erroPaises" />
+        <FormSelect class="flex-grow" id="pais" label="País" placeholder="Todos os Países" :options="paises" v-model="selectPais" :carregando="carregandoPaises" :erro="erroPaises[0]" />
 
         <FormRangeDuplo label="Período" :min="props.anoMin" :max="props.anoMax" v-model:valorInicial="rangeAnoInicial" v-model:valorFinal="rangeAnoFinal" />
     </section>
