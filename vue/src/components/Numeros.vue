@@ -34,20 +34,20 @@
 
     const fatores = computed(() => {
         let n = numero.value;
-        const res: number[] = [];
+        const fatores: number[] = [];
         let divisor = 2;
         while (n > 1) {
             if (n % divisor === 0) {
-                res.push(divisor);
+                fatores.push(divisor);
                 n /= divisor;
             } else {
                 divisor++;
             }
         }
-        return res;
+        return fatores;
     });
 
-    function validarNumero(e: Event) {
+    function validarNumero(e: Event): void {
         const target = e.target as HTMLInputElement;
         if (Number(target.value) > 1000000) {
             numero.value = 1000000;
