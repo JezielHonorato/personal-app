@@ -20,6 +20,7 @@ class Pais(models.Model):
         verbose_name = "País"
         verbose_name_plural = "Países"
         ordering = ["nome"]
+        db_table = "pais"
 
 
 class Autor(models.Model):
@@ -27,12 +28,12 @@ class Autor(models.Model):
         max_length=255,
         verbose_name="Nome",
     )
-    data_nascimento = models.IntegerField(
+    ano_nascimento = models.IntegerField(
         blank=True,
         null=True,
         verbose_name="Nascimento",
     )
-    data_obito = models.IntegerField(
+    ano_obito = models.IntegerField(
         blank=True,
         null=True,
         verbose_name="Falecimento",
@@ -54,6 +55,7 @@ class Autor(models.Model):
         verbose_name = "Autor"
         verbose_name_plural = "Autores"
         ordering = ["nome"]
+        db_table = "autor"
 
 
 class Genero(models.Model):
@@ -70,6 +72,7 @@ class Genero(models.Model):
         verbose_name = "Gênero"
         verbose_name_plural = "Gêneros"
         ordering = ["nome"]
+        db_table = "genero"
 
 
 def validar_ano_publicacao(value):
@@ -183,3 +186,4 @@ class Livro(models.Model):
         verbose_name = "Livro"
         verbose_name_plural = "Livros"
         ordering = ["titulo"]
+        db_table = "livro"
