@@ -14,8 +14,8 @@ class AutorAdmin(admin.ModelAdmin):
     list_display = (
         "nome",
         "pais",
-        "data_nascimento",
-        "data_obito",
+        "ano_nascimento",
+        "ano_obito",
     )
     search_fields = (
         "nome",
