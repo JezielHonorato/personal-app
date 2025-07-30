@@ -19,7 +19,7 @@
             <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <LivroResultado :livros="livrosFiltrados" @livroApagado="getLivros" @visualizarLivro="abrirVisualizador" />
                 <div v-if="carregando" class="text-center text-gray-600 dark:text-gray-400 py-4">Carregando livros...</div>
-                <div v-if="erro[0]" class="text-center text-red-500 py-4">Erro ao carregar livros: {{ erro }}</div>
+                <div v-if="erro[0]" class="text-center text-red-500 py-4">Erro ao carregar livros: {{ erro[0] }}</div>
             </div>
         </div>
 
