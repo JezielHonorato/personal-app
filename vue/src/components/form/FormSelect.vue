@@ -22,7 +22,7 @@
         modelValue: string | number | null | undefined;
         options: { id: number; nome: string }[];
         carregando: boolean;
-        erro: string | null;
+        erro?: string | null;
         cadastro?: string;
     }>();
 
