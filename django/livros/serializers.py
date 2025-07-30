@@ -16,7 +16,7 @@ class AutorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Autor
-        fields = ["id", "nome", "data_nascimento", "data_obito", "pais", "pais_id"]
+        fields = ["id", "nome", "ano_nascimento", "ano_obito", "pais", "pais_id"]
 
 
 class GeneroSerializer(serializers.ModelSerializer):
