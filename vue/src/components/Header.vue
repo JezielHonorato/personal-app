@@ -3,6 +3,8 @@
         <nav class="flex gap-4 text-gray-800 dark:text-gray-200">
             <RouterLink to="/">Início</RouterLink>
             <RouterLink to="/livros">Livros</RouterLink>
+            <RouterLink to="/numeros">Números</RouterLink>
+            <RouterLink to="/texto">Texto</RouterLink>
         </nav>
 
         <div class="flex items-center gap-2">
