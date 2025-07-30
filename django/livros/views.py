@@ -1,10 +1,15 @@
+# livros/views.py
 import os
 import markdown2
-from rest_framework import viewsets
-from rest_framework.response import Response
+
+# Remova a importação de Response aqui, pois CustomModelViewSet já a gerencia
 from rest_framework.decorators import action
 from django.db.models import Q
 from django.http import FileResponse, Http404
+
+# Importe sua nova classe base de ViewSet e as funções de utilidade
+from utils.api_response import success, error, CustomModelViewSet
+
 from .models import Pais, Autor, Genero, Livro
 from .serializers import (
     PaisSerializer,
@@ -14,22 +19,23 @@ from .serializers import (
 )
 
 
-class PaisViewSet(viewsets.ModelViewSet):
+# Todos os seus ViewSets agora herdam de CustomModelViewSet
+class PaisViewSet(CustomModelViewSet):
     queryset = Pais.objects.all().order_by("nome")
     serializer_class = PaisSerializer
 
 
-class AutorViewSet(viewsets.ModelViewSet):
+class AutorViewSet(CustomModelViewSet):
     queryset = Autor.objects.all().order_by("nome")
     serializer_class = AutorSerializer
 
 
-class GeneroViewSet(viewsets.ModelViewSet):
+class GeneroViewSet(CustomModelViewSet):
     queryset = Genero.objects.all().order_by("nome")
     serializer_class = GeneroSerializer
 
 
-class LivroViewSet(viewsets.ModelViewSet):
+class LivroViewSet(CustomModelViewSet):
     queryset = Livro.objects.all().order_by("titulo")
     serializer_class = LivroSerializer
 
@@ -90,8 +96,8 @@ class LivroViewSet(viewsets.ModelViewSet):
         livro = self.get_object()
 
         if not livro.arquivo:
-            return Response(
-                {"error": "Este livro não possui um arquivo associado."}, status=404
+            return error(
+                message="Este livro não possui um arquivo associado.", code=404
             )
 
         filepath = livro.arquivo.path
@@ -101,40 +107,49 @@ class LivroViewSet(viewsets.ModelViewSet):
             if filename.endswith(".txt"):
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
-                return Response({"type": "txt", "content": content})
+                return success({"type": "txt", "content": content})
 
             elif filename.endswith(".md"):
                 with open(filepath, "r", encoding="utf-8") as f:
                     html_content = markdown2.markdown(
                         f.read(), extras=["nl2br", "header-ids", "footnotes"]
                     )
-                return Response({"type": "md", "content_html": html_content})
+                return success({"type": "md", "content_html": html_content})
 
             elif filename.endswith(".pdf"):
                 download_url = request.build_absolute_uri(f"../download/")
-                return Response({"type": "pdf", "url": download_url})
+                return success({"type": "pdf", "url": download_url})
 
             else:
-                return Response(
-                    {"error": "Formato de arquivo não suportado"}, status=400
-                )
+                return error(message="Formato de arquivo não suportado", code=400)
 
         except FileNotFoundError:
-            return Response(
-                {"error": "Arquivo não encontrado no servidor."}, status=404
-            )
+            return error(message="Arquivo não encontrado no servidor.", code=404)
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            return error(
+                message="Erro interno do servidor ao processar arquivo.",
+                exception=e,
+                code=500,
+            )
 
     @action(detail=True, methods=["get"], url_path="download")
     def download(self, request, pk=None):
-        livro = self.get_object()
-        if not livro.arquivo:
-            raise Http404("Arquivo não encontrado para este livro.")
+        try:
+            livro = self.get_object()
+            if not livro.arquivo:
+                raise Http404("Arquivo não encontrado para este livro.")
 
-        filepath = livro.arquivo.path
+            filepath = livro.arquivo.path
 
-        if os.path.exists(filepath) and filepath.endswith(".pdf"):
-            return FileResponse(open(filepath, "rb"), content_type="application/pdf")
-        else:
-            raise Http404("O arquivo não é um PDF ou não foi encontrado.")
+            if os.path.exists(filepath) and filepath.endswith(".pdf"):
+                return FileResponse(
+                    open(filepath, "rb"), content_type="application/pdf"
+                )
+            else:
+                raise Http404("O arquivo não é um PDF ou não foi encontrado.")
+        except Http404 as e:
+            return error(message=str(e), code=404)
+        except Exception as e:
+            return error(
+                message="Erro ao tentar baixar o arquivo.", exception=e, code=500
+            )
