@@ -73,7 +73,7 @@
 
         if (autorForm.value.ano_obito && autorForm.value.ano_nascimento) {
             if (autorForm.value.ano_obito < autorForm.value.ano_nascimento) {
-                erro.value.push('O data de nascimento deve ser menor que a data do óbito.');
+                erro.value.push('O ano de nascimento deve ser menor que o ano do óbito.');
             }
         }
 
