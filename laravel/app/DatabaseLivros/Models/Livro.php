@@ -29,5 +29,15 @@ class Livro extends Model
         return $this->belongsTo(Genero::class);
     }
 
+    public function getCapaUrlAttribute()
+    {
+        return $this->capa ? url('api/file/'.$this->capa) : null;
+    }
+
+    public function getArquivoUrlAttribute()
+    {
+        return $this->arquivo ? url('api/file/'.$this->arquivo) : null;
+    }
+
     public $timestamps = false;
 }
