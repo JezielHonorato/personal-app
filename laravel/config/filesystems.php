@@ -60,9 +60,11 @@ return [
             'report' => false,
         ],
 
-        'assets_externo' => [
+        'livros' => [
             'driver' => 'local',
             'root' => env('STORAGE_ASSETS'),
+            'url' => env('APP_URL').'/api/livros',
+            'visibility' => 'public',
             'throw' => false,
         ],
 
