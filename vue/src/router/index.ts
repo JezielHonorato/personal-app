@@ -20,7 +20,8 @@ const routes = [
         path: '/json',
         name: 'JsonSorter',
         component: JsonSorter,
-    },    {
+    },
+    {
         path: '/numeros',
         name: 'Numeros',
         component: Numeros,
