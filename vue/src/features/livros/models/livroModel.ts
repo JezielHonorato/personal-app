@@ -1,5 +1,4 @@
-import type { Autor } from '../models';
-import type { Genero } from '../models';
+import type { Autor, Genero } from '../models';
 
 export interface Livro {
     id: number;
