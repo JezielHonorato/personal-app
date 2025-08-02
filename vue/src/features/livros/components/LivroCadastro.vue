@@ -26,8 +26,8 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" :fileName="livroForm.arquivo?.name" />
-                    <FormFileInput id="capa" label="Capa do livro" accept="image/*" />
+                    <FormFileInput id="arquivo" label="Arquivo do livro" accept=".pdf, .md, .txt" :fileName="livroForm.arquivo?.name" v-model="livroForm.arquivo" />
+                    <FormFileInput id="capa" label="Capa do livro" accept="image/*" v-model="livroForm.capa" />
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
