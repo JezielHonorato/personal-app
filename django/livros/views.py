@@ -1,13 +1,9 @@
-# livros/views.py
 import os
 import markdown2
 
-# Remova a importação de Response aqui, pois CustomModelViewSet já a gerencia
 from rest_framework.decorators import action
 from django.db.models import Q
 from django.http import FileResponse, Http404
-
-# Importe sua nova classe base de ViewSet e as funções de utilidade
 from utils.api_response import success, error, CustomModelViewSet
 
 from .models import Pais, Autor, Genero, Livro
@@ -19,7 +15,6 @@ from .serializers import (
 )
 
 
-# Todos os seus ViewSets agora herdam de CustomModelViewSet
 class PaisViewSet(CustomModelViewSet):
     queryset = Pais.objects.all().order_by("nome")
     serializer_class = PaisSerializer
