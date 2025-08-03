@@ -11,8 +11,7 @@ class AutorController
 {
     public function index()
     {
-        $autores = Autor::with(['pais'])
-            ->get();
+        $autores = Autor::with(['pais'])->get();
 
         return ApiResponse::success($autores, 200);
     }
