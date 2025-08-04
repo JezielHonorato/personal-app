@@ -3,7 +3,7 @@
         <div class="bg-gray-100 dark:bg-gray-800 p-4 max-w-2xl mx-auto rounded-lg shadow-md">
             <h1 class="text-2xl font-bold mb-4 text-gray-700 dark:text-gray-300">Conversor e Analisador Numérico</h1>
 
-            <input v-model="numeroStr" type="text" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 border dark:border-gray-700 mb-4 text-gray-800 dark:text-gray-200" placeholder="Digite um número..." />
+            <input v-model="numeroStr" type="text" @input="filtrarNumeros" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-800 border dark:border-gray-700 mb-4 text-gray-800 dark:text-gray-200" placeholder="Digite um número..." />
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800 dark:text-gray-200">
                 <div class="bg-white dark:bg-gray-700 rounded p-4">
@@ -45,10 +45,7 @@
                     <div class="flex justify-between items-center">
                         <p>{{ numeroExtenso }}</p>
                         <button @click="copiarConteudo(numeroExtenso)" class="ml-2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v6a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 00-2-2h-6a2 2 0 00-2 2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7v6a2 2 0 01-2 2h-6a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2zM8 7V5a2 2 0 012-2h6a2 2 0 012 2v2M8 7H6a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2v-2"></path>
-                            </svg>
+                            <Copy class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -203,6 +200,11 @@
         } catch (err) {
             console.error('Falha ao copiar: ', err);
         }
+    }
+
+    function filtrarNumeros(e: Event) {
+        const input = e.target as HTMLInputElement;
+        numeroStr.value = input.value.replace(/\D/g, '');
     }
 </script>
 
